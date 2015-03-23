@@ -7,6 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
         <!-- build:css(.tmp) styles/main.css -->
+        <link rel="stylesheet" href="bower_components/bootstrap-sass-official/assets/stylesheets/_bootstrap.scss">
         <link rel="stylesheet" href="styles/main.css">
         <!-- endbuild -->
         <!-- build:js scripts/vendor/modernizr.js -->
@@ -18,61 +19,34 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
+<canvas id="canvas" width="420px" height="420px" style="background: #fff;     magrin:20px;"></canvas>
 
-        <div class="container">
-            <div class="header">
-                <ul class="nav nav-pills pull-right">
-                    <li class="active"><a href="#">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-                <h3 class="text-muted">RicochetBackbone</h3>
-            </div>
+<script type="text/javascript" language="javascript">
+var bw = 400;
+var bh = 400;
+var p = 10;
 
-            <div class="jumbotron">
-                <h1>'Allo, 'Allo!</h1>
-                <p class="lead">Always a pleasure scaffolding your apps.</p>
-                <p><a class="btn btn-lg btn-success" href="#">Splendid!</a></p>
-            </div>
-
-            <div class="row text-left">
-                <div class="col-md-offset-4">
-                    <h2>Now Try,</h2>
-                    <h4><b>yo backbone:router</b> &lt;router&gt;</h4>
-                    <h4><b>yo backbone:collection</b> &lt;collection&gt;</h4>
-                    <h4><b>yo backbone:model </b> &lt;model&gt;</h4>
-                    <h4><b>yo backbone:view </b> &lt;view&gt;</h4>
-                </div>
-            </div>
-
-            <div class="row marketing">
-                <div class="col-lg-6">
-                    <h4>HTML5 Boilerplate</h4>
-                    <p>HTML5 Boilerplate is a professional front-end template for building fast, robust, and adaptable web apps or sites.</p>
-
-                    <h4>Bootstrap</h4>
-                    <p>Sleek, intuitive, and powerful mobile first front-end framework for faster and easier web development.</p>
-
-                    <h4>Modernizr</h4>
-                    <p>Modernizr is an open-source JavaScript library that helps you build the next generation of HTML5 and CSS3-powered websites.</p>
-
-                </div>
-                <div class="col-lg-6">
-                    <h4>Backbone.js</h4>
-                    <p>Backbone.js gives structure to web applications by providing models, collections, views and connects it all to your existing API over a RESTful JSON interface.</p>
-
-                    <h4>Lodash.js</h4>
-                    <p>A utility library delivering consistency, customization, performance, & extras. </p>
+var canvas = document.getElementById("canvas");
+var context = canvas.getContext("2d");
+function drawBoard(){
+for (var x = 0; x <= bw; x += 40) {
+    context.moveTo(0.5 + x + p, p);
+    context.lineTo(0.5 + x + p, bh + p);
+}
 
 
-                </div>
-            </div>
+for (var x = 0; x <= bh; x += 40) {
+    context.moveTo(p, 0.5 + x + p);
+    context.lineTo(bw + p, 0.5 + x + p);
+}
 
-            <div class="footer">
-                <p>♥ from the Yeoman team</p>
-            </div>
+context.strokeStyle = "black";
+context.stroke();
+}
 
-        </div>
+drawBoard();
+</script>
+
 
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
