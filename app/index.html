@@ -1,0 +1,70 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <title>RicochetBackbone</title>
+        <meta name="description" content="Ricochet Robots in Backbone">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+
+    <body>
+<div id="appView">
+</div>
+<canvas id="canvas" width="420px" height="420px" style="background: #fff;     magrin:20px;">
+
+</canvas>
+
+<button class="btn">Hi</button>
+<button>Hi</button>
+
+
+<script type="text/javascript" language="javascript">
+var bw = 400;
+var bh = 400;
+var p = 10;
+
+var canvas = document.getElementById("canvas");
+var context = canvas.getContext("2d");
+function drawBoard(){
+for (var x = 0; x <= bw; x += 40) {
+    context.moveTo(0.5 + x + p, p);
+    context.lineTo(0.5 + x + p, bh + p);
+}
+
+
+for (var x = 0; x <= bh; x += 40) {
+    context.moveTo(p, 0.5 + x + p);
+    context.lineTo(bw + p, 0.5 + x + p);
+}
+
+context.strokeStyle = "black";
+context.stroke();
+}
+
+drawBoard();
+</script>
+        <!-- build:js scripts/vendor.js -->
+        <script src="bower_components/jquery/dist/jquery.js"></script>
+        <script src="bower_components/lodash/dist/lodash.compat.js"></script>
+        <script src="bower_components/backbone/backbone.js"></script>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+        <!-- endbuild -->
+
+        <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap.js"></script>
+
+        <!-- build:js({.tmp,app}) scripts/main.js -->
+        <script src="scripts/main.js"></script>
+        <script src="scripts/views/boardView.js"></script>
+        <script src="scripts/views/appView.js"></script>
+        <script src="scripts/models/appModel.js"></script>
+        <script src="scripts/models/boardModel.js"></script>
+        <!-- endbuild -->
+</body>
+</html>

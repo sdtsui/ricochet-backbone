@@ -1,0 +1,22 @@
+{
+  "name": "ricochet-backbone",
+  "version": "0.0.1",
+  "description": "Ricochet Robots, built in Backbone.js",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sdtsui/ricochet-backbone"
+  },
+  "author": "Sze-Hung Daniel Tsui",
+  "license": "ISC",
+  "engines": {
+    "node": ">=0.10.3 <0.12"
+  },
+  "homepage": "https://github.com/sdtsui/ricochet-backbone",
+  "dependencies": {},
+  "devDependencies": {}
+}
