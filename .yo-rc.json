@@ -1,0 +1,12 @@
+{
+  "generator-backbone": {
+    "appPath": "app",
+    "appName": "RicochetBackbone",
+    "coffee": false,
+    "testFramework": "mocha",
+    "templateFramework": "lodash",
+    "sassBootstrap": true,
+    "includeRequireJS": false
+  },
+  "generator-mocha": {}
+}
