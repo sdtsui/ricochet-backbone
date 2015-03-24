@@ -15,6 +15,7 @@
     <script src="app/scripts/collections/robots.js"></script>
 
     <!-- Backbone Models -->
+    <script src="app/scripts/models/quadrantHolderModel.js"></script>
     <script src="app/scripts/models/robotModel.js"></script>
     <script src="app/scripts/models/boardModel.js"></script>
     <script src="app/scripts/models/appModel.js"></script>
@@ -28,27 +29,22 @@
     <script src="app/scripts/views/boardControlsView.js"></script>
     <script src="app/scripts/views/canvasDrawView.js"></script>
 
-
-
-
     <div id="appView"></div>
-    
     <script type="text/javascript">
     $(document).on('ready', function(){
+        //Instantiate the main appModel instance.
         var app = new appModel()
-
         window.APPDIV = new appView({
             model: app,
             el: $('#appView')
         });
         APPDIV.render();
 
+        //draw on canvas...
         var boardDetails = new canvasDrawView({
             model: app
         }).render();
     });
-
     </script>
-
   </body>
 </html>

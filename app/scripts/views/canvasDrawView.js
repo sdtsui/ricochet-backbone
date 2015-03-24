@@ -1,11 +1,18 @@
 window.canvasDrawView = Backbone.View.extend({
   render: function() {
     var context = this.getContext();
-    var width_Size = this.getWidthAndSize();
+    var boardProps = this.getWidthAndSize();
     var completeBoard = this.model.get('boardModel').get('completeBoard');
 
-    this.canvasRender(context, width_Size.bw, width_Size.bsize);
-    this.drawWalls(context, width_Size.bw, width_Size.bsize, completeBoard);
+    /**
+     * Render the canvas first, which is a 16x16 grid of grey lines.
+     * drawBoardProps on top of the canvas:
+     *  walls are thicker black lines
+     *  shapes inside the squares
+     *  
+     */
+    this.canvasRender(context, boardProps.bw, boardProps.bsize);
+    this.drawBoardProps(context, boardProps.bw, boardProps.bsize, completeBoard);
   },
   getContext: function(){
     var canvas = document.getElementById('boardCanvas');
@@ -28,7 +35,6 @@ window.canvasDrawView = Backbone.View.extend({
             context.moveTo(x + p, p);
             context.lineTo(x + p, boardWidth + p-20);
         }
-
         for (var x = 0; x < boardWidth; x += boxSize) {
             context.moveTo(p, x + p);
             context.lineTo(boardWidth + p-20, x + p);
@@ -39,61 +45,32 @@ window.canvasDrawView = Backbone.View.extend({
 
       drawBoard();
   },
-  drawWalls: function(context, boardWidth, boxSize, completeBoard){
-      console.log("complete: ",completeBoard);
+  drawBoardProps: function(context, boardWidth, boxSize, completeBoard){
       context.beginPath();
       var p = 16;
-
-      function drawWalls(viewCtx){
-        //for each row in the complete board
-        /**
-         * for each square on the row:
-         *  determine the top right corner
-         *  determine walls, and shapes that need to be drawn
-         *  
-         *  add the walls
-         *  call a drawShape function, assing context and x/y
-         * 
-         */
+      function drawBoardProps(viewCtx){
         for (var row = 0; row < 16; row++){
           for(var col = 0; col < 16; col++){
             var x = p+(col*boxSize);
             var y = p+(row*boxSize);
             var squareProps = completeBoard[row][col];
-            // if (squareProps === "SEYH") {
-            //   debugger;
-            // }
-            // console.log('x, y, propString :', x,y,squareProps);
             if (squareProps === "X"){
               //draw nothing
               continue;
             }
-            if (squareProps.indexOf("N") !== -1){
-              viewCtx.drawOneWall(context, boxSize, x, y, "N");
-            } 
-            if (squareProps.indexOf("W") !== -1){
-              viewCtx.drawOneWall(context, boxSize, x, y, "W");
-            } 
-            if (squareProps.indexOf("S") !== -1){
-              viewCtx.drawOneWall(context, boxSize, x, y, "S");
-            } 
-            if (squareProps.indexOf("E") !== -1){
-              viewCtx.drawOneWall(context, boxSize, x, y, "E");
-            }
+            viewCtx.drawWalls(context, boxSize, x, y, squareProps);
             var colorIndex = viewCtx.indexOfColorOrShape(squareProps, "RGBY");
             if (colorIndex !== -1){
               var color = squareProps[colorIndex];
               var shape = squareProps[viewCtx.indexOfColorOrShape(squareProps, "CTQH")];
               viewCtx.drawShape(context, x, y, color, shape);
             }
-
           }
-
         }
       }
-      var ctx = this
-      drawWalls(ctx);
 
+      var ctx = this
+      drawBoardProps(ctx);
   },
   indexOfColorOrShape: function(propString, searchString){
     for(var i =0 ; i < searchString.length; i++){
@@ -104,12 +81,26 @@ window.canvasDrawView = Backbone.View.extend({
     }
     return -1;
   },
+  drawWalls: function(context, boxSize, x, y, propString){
+    if (propString.indexOf("N") !== -1){
+      this.drawOneWall(context, boxSize, x, y, "N");
+    } 
+    if (propString.indexOf("W") !== -1){
+      this.drawOneWall(context, boxSize, x, y, "W");
+    } 
+    if (propString.indexOf("S") !== -1){
+      this.drawOneWall(context, boxSize, x, y, "S");
+    } 
+    if (propString.indexOf("E") !== -1){
+      this.drawOneWall(context, boxSize, x, y, "E");
+    }
+  },
   drawOneWall: function(context, boxSize, x, y, dir){
       context.moveTo(x,y);
       context.beginPath();
-      console.log("drawing wall: ", dir, "at : x y :", x, y);
-      //ld, lineDetail
-      //draw relative to x and y
+      // console.log("drawing wall: ", dir, "at : x y :", x, y);
+
+      //ld, lineDetail hash to draw lines relative to passed-in x and y
       var ld = {
         N:{
           start:{x: 0, y:0},
@@ -128,15 +119,16 @@ window.canvasDrawView = Backbone.View.extend({
           end:{x: boxSize, y: boxSize}
         }
       }
+
       context.moveTo(x+ld[dir].start.x,y+ld[dir].start.y)
       context.lineWidth = 5;
 
       context.lineTo(x+ld[dir].end.x,y+ld[dir].end.y);
-      context.strokeStyle = "black";
+      context.strokeStyle = "#66665D";
       context.stroke();
   },
   drawShape: function(context, x, y, color, shape){
-    console.log("drawing" + color + " " + shape + " at : x y:", x , y)
+    // console.log("drawing" + color + " " + shape + " at : x y:", x , y)
 
   }
 });
