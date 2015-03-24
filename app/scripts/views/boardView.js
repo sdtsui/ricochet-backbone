@@ -2,7 +2,6 @@ window.boardView = Backbone.View.extend({
   template: _.template('<canvas id="boardCanvas" width="<%= boardWidth %>" height="<%= boardWidth %>" style="background: #fff;  magrin:20px;"></canvas>'),
 
   events: {
-    'click': 'sayHi'
   },
   render: function() {
     console.log("Model Attr : " ,this.model.attributes);

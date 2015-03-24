@@ -9,7 +9,6 @@ window.canvasDrawView = Backbone.View.extend({
      * drawBoardProps on top of the canvas:
      *  walls are thicker black lines
      *  shapes inside the squares
-     *  
      */
     this.canvasRender(context, boardProps.bw, boardProps.bsize);
     this.drawBoardProps(context, boardProps.bw, boardProps.bsize, completeBoard);
@@ -98,8 +97,6 @@ window.canvasDrawView = Backbone.View.extend({
   drawOneWall: function(context, boxSize, x, y, dir){
       context.moveTo(x,y);
       context.beginPath();
-      // console.log("drawing wall: ", dir, "at : x y :", x, y);
-
       //ld, lineDetail hash to draw lines relative to passed-in x and y
       var ld = {
         N:{
@@ -129,6 +126,5 @@ window.canvasDrawView = Backbone.View.extend({
   },
   drawShape: function(context, x, y, color, shape){
     // console.log("drawing" + color + " " + shape + " at : x y:", x , y)
-
   }
 });
