@@ -4,27 +4,51 @@
     <title>RicochetBackbone</title>
     <meta name="description" content="Ricochet Robots in Backbone">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-  </head>
-  <body>
-    <div id="APP">Main App</div>
-
     <!-- Dependencies -->
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script src="node_modules/underscore/underscore-min.js"></script>
     <script src="node_modules/backbone/backbone-min.js"></script>
-
-
+    <script src="node_modules/twitter-bootstrap/docs/assets/js/bootstrap.min.js"></script>
+  </head>
+  <body>
     <!-- Backbone Collections -->
-    <script src="scripts/collections/robots.js"></script>
+    <script src="app/scripts/collections/robots.js"></script>
 
     <!-- Backbone Models -->
-    <script src="scripts/models/appModel.js"></script>
-    <script src="scripts/models/robotModel.js"></script>
-    <script src="scripts/models/boardModel.js"></script>
+    <script src="app/scripts/models/robotModel.js"></script>
+    <script src="app/scripts/models/boardModel.js"></script>
+    <script src="app/scripts/models/appModel.js"></script>
+
+    <!-- Backbone View Templates -->
+    <script src="app/scripts/templates/boardViewTemplate.js"></script>
 
     <!-- Backbone Views -->
-    <script src="scripts/views/boardView.js"></script>
-    <script src="scripts/views/boardControlsView.js"></script>
+    <script src="app/scripts/views/appView.js"></script>
+    <script src="app/scripts/views/boardView.js"></script>
+    <script src="app/scripts/views/boardControlsView.js"></script>
+    <script src="app/scripts/views/canvasDrawView.js"></script>
+
+
+
+
+    <div id="appView"></div>
+    
+    <script type="text/javascript">
+    $(document).on('ready', function(){
+        var app = new appModel()
+
+        window.APPDIV = new appView({
+            model: app,
+            el: $('#appView')
+        });
+        APPDIV.render();
+
+        var boardDetails = new canvasDrawView({
+            model: app
+        }).render();
+    });
+
+    </script>
 
   </body>
 </html>
