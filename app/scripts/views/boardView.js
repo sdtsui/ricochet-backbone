@@ -4,7 +4,7 @@ window.boardView = Backbone.View.extend({
   events: {
   },
   render: function() {
-    console.log("Model Attr : " ,this.model.attributes);
+    // console.log("Model Attr : " ,this.model.attributes);
     this.$el = this.template(this.model.attributes);
     return this.$el;
   }

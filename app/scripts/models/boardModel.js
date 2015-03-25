@@ -65,13 +65,27 @@ window.boardModel = Backbone.Model.extend({
             newQuadrant = this.rowStringsToArrays(newQuadrant, 8);
             for (var j = i; j >0; j--){
                 newQuadrant = this.rotateQuadrant(newQuadrant,8)
-                console.log("ROTATING");
             }
-            console.log("Quadrant : "+ i+ "  :" ,newQuadrant);
+            // console.log("Quadrant : "+ i+ "  :" ,newQuadrant);
             quads.push(newQuadrant);
         }
-        console.log('quads : ', quads);
+        // console.log('quads : ', quads);
         return quads;
+    },
+    setRobots: function(){
+        return;
+        var newRobots = [];
+
+        //start with a list of dead squares: center+prev robots
+        //while num of robots set < 4:
+        /**
+         *  find 2 random coords
+         *  if not in center+prev && completeBoard[x][y].length < 3
+         *  add to dead squares
+         *  push new robot with x/y coords to newRobots
+         *  
+         */
+        this.set('robots') = new robots(newRobots);
     },
     // newGame: function(){
     // },

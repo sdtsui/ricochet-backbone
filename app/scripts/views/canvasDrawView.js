@@ -3,7 +3,8 @@ window.canvasDrawView = Backbone.View.extend({
     var context = this.getContext();
     var boardProps = this.getWidthAndSize();
     var completeBoard = this.model.get('boardModel').get('completeBoard');
-
+    console.log('completeBoard :', completeBoard);
+    this.model.set('boxSize', boardProps.bsize);
     /**
      * Render the canvas first, which is a 16x16 grid of grey lines.
      * drawBoardProps on top of the canvas:
@@ -12,6 +13,11 @@ window.canvasDrawView = Backbone.View.extend({
      */
     this.canvasRender(context, boardProps.bw, boardProps.bsize);
     this.drawBoardProps(context, boardProps.bw, boardProps.bsize, completeBoard);
+
+    // setInterval(function(){
+    //   context.rotate(Math.PI);
+    //   console.log('rotate');
+    // },2000);
   },
   getContext: function(){
     var canvas = document.getElementById('boardCanvas');
@@ -62,7 +68,7 @@ window.canvasDrawView = Backbone.View.extend({
             if (colorIndex !== -1){
               var color = squareProps[colorIndex];
               var shape = squareProps[viewCtx.indexOfColorOrShape(squareProps, "CTQH")];
-              viewCtx.drawShape(context, x, y, color, shape);
+              viewCtx.drawShape(context, boxSize, x, y, color, shape);
             }
           }
         }
@@ -124,7 +130,55 @@ window.canvasDrawView = Backbone.View.extend({
       context.strokeStyle = "#66665D";
       context.stroke();
   },
-  drawShape: function(context, x, y, color, shape){
-    // console.log("drawing" + color + " " + shape + " at : x y:", x , y)
+  drawShape: function(context, boxSize, x, y, color, shape){
+    var colorHex = this.model.get('colorHex');
+    // console.log("drawing " + color + " " + shape + " at : x y:", x , y)
+    if (shape === "Q"){
+      context.fillStyle = colorHex[color];
+      context.beginPath();
+      context.moveTo(x+boxSize*.25, y+boxSize*.25);
+      context.lineTo(x+boxSize*.75, y+boxSize*.25);
+      context.lineTo(x+boxSize*.75, y+boxSize*.75);
+      context.lineTo(x+boxSize*.25, y+boxSize*.75);
+      context.closePath();
+      context.fill();
+    } else if (shape === "C"){
+      context.fillStyle = colorHex[color];
+      context.beginPath();
+      context.arc(
+        x+boxSize*.5,
+        y+boxSize*.5,
+        boxSize*.25,
+        0, 2*Math.PI,
+        false
+        )
+      context.fill();   
+      //for borders:
+      // context.lineWidth = 5;
+      // context.strokeStyle = '#003300';//something else
+      // context.stroke();         
+    } else if (shape === "T"){
+      context.fillStyle = colorHex[color];
+      context.beginPath();
+      context.moveTo(x+boxSize*.25, y+boxSize*.75);
+      context.lineTo(x+boxSize*.75, y+boxSize*.75);
+      context.lineTo(x+boxSize*.5, y+boxSize*.25);
+      context.closePath();
+      context.fill();
+    } else if (shape === "H"){
+      context.fillStyle = colorHex[color];
+      context.beginPath();
+      context.moveTo(x+boxSize*.2, y+boxSize*.7);
+      context.lineTo(x+boxSize*.2, y+boxSize*.3);
+      context.lineTo(x+boxSize*.5, y+boxSize*.15);
+      context.lineTo(x+boxSize*.8, y+boxSize*.3);
+      context.lineTo(x+boxSize*.8, y+boxSize*.7);
+      context.lineTo(x+boxSize*.5, y+boxSize*.85);
+      context.closePath();
+      context.fill();
+    }
+  },
+  drawRobots: function(){
+    //try using overlaid elements
   }
 });

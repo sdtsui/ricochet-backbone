@@ -1,7 +1,9 @@
 window.robotModel = Backbone.Model.extend({
 	defaults: {
-		completionStatus: false
+		color: undefined,
+		row: undefined,
+		col: undefined
 	},
-	complete: function() {
+	initialize: function(){
 	}
 })
