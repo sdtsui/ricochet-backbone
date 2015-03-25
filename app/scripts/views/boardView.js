@@ -1,5 +1,5 @@
 window.boardView = Backbone.View.extend({
-  template: _.template('<canvas id="boardCanvas" width="<%= boardWidth %>" height="<%= boardWidth %>" style="background: #fff;  magrin:20px;"></canvas>'),
+  template: _.template('<canvas id="boardCanvas" width="<%= boardWidth %>" height="<%= boardWidth %>" style="background: #fff;"></canvas>'),
 
   events: {
   },
@@ -9,3 +9,8 @@ window.boardView = Backbone.View.extend({
     return this.$el;
   }
 });
+
+// window.robotView = Backbone.View.extend({
+// 	template: _.template('<canvas id="boardCanvas" width="<%= boardWidth %>" height="<%= boardWidth %>" style="background: #fff;  magrin:20px;"></canvas>');
+
+// });

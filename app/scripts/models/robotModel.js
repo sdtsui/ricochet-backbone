@@ -5,5 +5,8 @@ window.robotModel = Backbone.Model.extend({
 		col: undefined
 	},
 	initialize: function(){
+		console.log('new '+this.get('color')+ ' robot at: R/C', 
+			this.get('row'),
+			this.get('col'));
 	}
 })

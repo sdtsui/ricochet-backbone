@@ -73,19 +73,40 @@ window.boardModel = Backbone.Model.extend({
         return quads;
     },
     setRobots: function(){
-        return;
         var newRobots = [];
+        var robotColors = ['R', 'Y', 'G', 'B'];
+        //row, col
+        var occupiedSquares = [[8,8], [8,9], [9,8], [9,9]]
+        while(newRobots.length <4){
+            var newCoords = [_.random(0,15), _.random(0,15)];
+            var row = newCoords[0];
+            var col = newCoords[1];
+            var match = false;
+            for(var i = 0; i < occupiedSquares.length; i++){
+                if (
+                    (occupiedSquares[i][0] === row && occupiedSquares[i][1] === col)
+                    ||
+                    (this.get('completeBoard')[row][col].length > 2 )
+                    )
+                {
+                    match = true;
+                    break;
+                }
+            }
+            if (match){
+                console.log('conflict at  ' + row +"|"+col+ ' trying again');
+                continue;
+            } else {
+                occupiedSquares.push(newCoords.splice());
+                newRobots.push(new robotModel({
+                    color: robotColors.shift(),
+                    row: newCoords[0],
+                    col: newCoords[1]
+                }));
+            }
 
-        //start with a list of dead squares: center+prev robots
-        //while num of robots set < 4:
-        /**
-         *  find 2 random coords
-         *  if not in center+prev && completeBoard[x][y].length < 3
-         *  add to dead squares
-         *  push new robot with x/y coords to newRobots
-         *  
-         */
-        this.set('robots') = new robots(newRobots);
+        }
+        this.set('robots', new robots(newRobots));
     },
     // newGame: function(){
     // },
@@ -94,6 +115,8 @@ window.boardModel = Backbone.Model.extend({
     initialize: function(){
         this.set('quadrantArrangement', this.setQuads());
         this.constructBoard(this.get('quadrantArrangement'));
+        this.setRobots();
+        console.log('setRobots: ', this.get('robots'));
     },
     constructBoard: function(boardArray){
         var newBoard = [];

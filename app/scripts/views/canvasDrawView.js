@@ -27,7 +27,8 @@ window.canvasDrawView = Backbone.View.extend({
   getWidthAndSize: function(){
       var bw = this.model.get('boardModel').get('boardWidth');
       var bh = bw;
-      var boxSize = (bw-20)/16
+      var boxSize = (bw-5)/16;
+      console.log('boxSize : ', boxSize);
       return {
         bsize: boxSize,
         bw: bw
@@ -35,14 +36,14 @@ window.canvasDrawView = Backbone.View.extend({
   },
   canvasRender: function(context, boardWidth, boxSize){  
       function drawBoard(){
-        var p = 16
+        var p = 2
         for (var x = 0; x < boardWidth; x += boxSize) {
             context.moveTo(x + p, p);
-            context.lineTo(x + p, boardWidth + p-20);
+            context.lineTo(x + p, boardWidth + p-5);
         }
         for (var x = 0; x < boardWidth; x += boxSize) {
             context.moveTo(p, x + p);
-            context.lineTo(boardWidth + p-20, x + p);
+            context.lineTo(boardWidth + p-5, x + p);
         }
         context.strokeStyle = "grey";
         context.stroke();
@@ -52,7 +53,7 @@ window.canvasDrawView = Backbone.View.extend({
   },
   drawBoardProps: function(context, boardWidth, boxSize, completeBoard){
       context.beginPath();
-      var p = 16;
+      var p = 2;
       function drawBoardProps(viewCtx){
         for (var row = 0; row < 16; row++){
           for(var col = 0; col < 16; col++){
@@ -87,6 +88,9 @@ window.canvasDrawView = Backbone.View.extend({
     return -1;
   },
   drawWalls: function(context, boxSize, x, y, propString){
+    // if(propString === "E"){
+    //   debugger;
+    // }
     if (propString.indexOf("N") !== -1){
       this.drawOneWall(context, boxSize, x, y, "N");
     } 
@@ -118,7 +122,7 @@ window.canvasDrawView = Backbone.View.extend({
           end:{x:0, y:boxSize}
         },
         E:{
-          start:[boxSize,0],
+          start:{x: boxSize, y: 0},
           end:{x: boxSize, y: boxSize}
         }
       }
