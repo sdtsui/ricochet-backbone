@@ -31,10 +31,10 @@ window.appModel = Backbone.Model.extend({
             windowWidth     : windowWidth,
             windowHeight    : windowHeight,
             boardModel      : new boardModel({boardWidth: boardWidth})
-        });
+        });        
     },
     placeRobots: function(){
-        
+
     }
 
 });

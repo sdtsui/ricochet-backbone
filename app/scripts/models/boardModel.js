@@ -10,7 +10,8 @@ window.boardModel = Backbone.Model.extend({
             E: "S",
             S: "W",
             W: "N"
-        }
+        },
+        robots : undefined
     },
     rowStringsToArrays : function(quad, size){
         var convertedQuad = [];

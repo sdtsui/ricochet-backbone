@@ -1,5 +1,7 @@
 window.boardView = Backbone.View.extend({
-  template: _.template('<canvas id="boardCanvas" width="<%= boardWidth %>" height="<%= boardWidth %>" style="background: #fff;"></canvas>'),
+  template: _.template(
+  	'<canvas id="boardCanvas" width="<%= boardWidth %>" height="<%= boardWidth %>" style="background: #fff;"></canvas>'
+  	),
 
   events: {
   },
