@@ -16,14 +16,52 @@ window.boardModel = Backbone.Model.extend({
         activeRobot: undefined
     },
     initialize: function(){
+        this.on('all', function(n){
+            console.log('Local Change : ', n);
+        })
+
         this.set('quadrantArrangement', this.setQuads());
         this.constructBoard(this.get('quadrantArrangement'));
         this.setRobots();
         console.log('setRobots: ', this.get('robots'));
         //N,S,E,W:
-        Backbone.Events.on('keydown', function(e){
-            console.log('boardModel sees keydown', e);
-        }, this)
+        Backbone.Events.on('all', function(n){
+            console.log('Global Event : ', n);
+            if (n.slice(0,3) === 'key'){
+                this.respondToKey(n);
+            }
+
+        }, this);
+
+    },
+    respondToKey : function(keyName){
+        var activeRobot = this.get('activeRobot');
+        if (activeRobot && keyName.length === 4){
+            this.moveRobot(keyName[3], activeRobot);
+        }
+    },
+    moveRobot : function(dir, robot){
+        var dHash = {
+            N: {
+                row: -1,
+                col: 0
+            },
+            S: {
+                row: 1,
+                col: 0
+            },
+            E: {
+                row: 0,
+                col: 1
+            },
+            W: {
+                row: 0,
+                col: -1
+            }
+        }
+        var robotToMove = this.get('robots').where({color: robot})[0];
+        console.log('robot props :', robotToMove, robotToMove.attributes);
+        // console.log ('moving ' + robot +' ' + dir);
     },
     rowStringsToArrays : function(quad, size){
         var convertedQuad = [];

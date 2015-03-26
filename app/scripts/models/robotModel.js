@@ -20,5 +20,9 @@ window.robotModel = Backbone.Model.extend({
 	},
 	triggerMove: function(){
 		this.trigger('updateRobotPosition');
+	},
+	savePosition: function(){
+		var lastLoc = this.get('loc');
+		this.set('lastLoc') = lastLoc;
 	}
 })

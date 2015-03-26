@@ -62,7 +62,6 @@
 //makes more sense there than in a random script
 $(document).on('ready', function(){
     $(document.body).on('keydown', function(e){
-        console.log('e :', e);
         var keyCode = e.keyCode;
         if (e.keyCode === 38){
             Backbone.Events.trigger('keyN');

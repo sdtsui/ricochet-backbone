@@ -17,7 +17,7 @@ window.robotView = Backbone.View.extend({
   },
   move: function(dir){
     var props = this.model.attributes;
-    console.log('props :', props);
+    // console.log('props :', props);
     var boxSize = props.boxSize;
     var robot = $('.'+props.color).on('mousedown', function(selection){
       /**
@@ -25,9 +25,9 @@ window.robotView = Backbone.View.extend({
        * 
        */
       var activeRobot = props.color;
-      console.log('Old Active :', appModel.get('boardModel').get('activeRobot') )
+      // console.log('Old Active :', appModel.get('boardModel').get('activeRobot') )
       appModel.get('boardModel').set('activeRobot', activeRobot);
-      console.log('New Active: set' );
+      // console.log('New Active: set' );
     });
     var context = robot[0].getContext('2d')
     context.fillStyle = 'white';
