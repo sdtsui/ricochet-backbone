@@ -5,7 +5,7 @@ window.robotView = Backbone.View.extend({
   events: {
   },
   initialize: function(){
-    this.model.on('updateRobotPosition', this.move, this);
+    this.model.on('change:boxSize', this.move, this);
   },
   render: function(){
     // console.log('in view: this.model.attributes', this.model.attributes);
@@ -17,15 +17,27 @@ window.robotView = Backbone.View.extend({
   },
   move: function(dir){
     var props = this.model.attributes;
-    var boxSize = 19.9
-    console.log('props:', props);
-    var robot = $('.'+props.color);
-    robot[0].getContext('2d').fillText("Robot",10,10);
-    robot.animate({
-        top: 8+(props.row*boxSize),
-        left: 8+(props.col*boxSize)
-    }, {duration: 500}, function(){
-        console.log('done animating');
+    console.log('props :', props);
+    var boxSize = props.boxSize;
+    var robot = $('.'+props.color).on('mousedown', function(selection){
+      /**
+       * emit a robot clicked event to the model
+       * 
+       */
+      var activeRobot = props.color;
+      console.log('Old Active :', appModel.get('boardModel').get('activeRobot') )
+      appModel.get('boardModel').set('activeRobot', activeRobot);
+      console.log('New Active: set' );
     });
+    var context = robot[0].getContext('2d')
+    context.fillStyle = 'white';
+    context.font = '20px serif'
+    context.fillText("R",boxSize/4,boxSize/2);
+    robot.animate({
+        top: 8+(props.loc.row*boxSize+(boxSize*.3)),
+        left: 8+(props.loc.col*boxSize+(boxSize*.3)),
+        width: boxSize/2,
+        height: boxSize/2
+    }, {duration: 500}, function(){});
   }
 });

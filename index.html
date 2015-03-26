@@ -35,42 +35,46 @@
     <script src="app/scripts/views/boardControlsView.js"></script>
     <script src="app/scripts/views/canvasDrawView.js"></script>
 
-    <div id="appView">
-<canvas class="R"id="extra" width="25px" height="25px">R</canvas>
-<canvas class="Y"id="extra" width="25px" height="25px">R</canvas>
+    <div id="appView"> </div>
 
-    </div>
+
     <script type="text/javascript">
     $(document).on('ready', function(){
         //Instantiate the main appModel instance.
-        var app = new appModel()
+        window.appModel = new appModel()
         window.APPDIV = new appView({
-            model: app,
+            model: appModel,
             el: $('#appView')
         });
         APPDIV.render();
 
         //Draw on canvas.
         var boardDetails = new canvasDrawView({
-            model: app
+            model: appModel
         }).render();
     });
     </script>
 
 
-<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.js"></script>
-<script type="text/javascript">
-// $(document).on('ready', function(){
-//     var robot = $('.R')
-//     robot[0].getContext('2d').fillText("R",10,10);
-//     robot.animate({
-//         top: 500,
-//         left: 500
-//     }, {duration: 5000}, function(){
-//         console.log('done animating');
-//     });
-// })
 
+<script type="text/javascript">
+//condense this into a clickhandler function to put into boardView eventually,
+//makes more sense there than in a random script
+$(document).on('ready', function(){
+    $(document.body).on('keydown', function(e){
+        console.log('e :', e);
+        var keyCode = e.keyCode;
+        if (e.keyCode === 38){
+            Backbone.Events.trigger('keyN');
+        } else if (e.keyCode === 40) {
+            Backbone.Events.trigger('keyS');
+        } else if (e.keyCode === 37) {
+            Backbone.Events.trigger('keyE');
+        } else if (e.keyCode === 39) {
+            Backbone.Events.trigger('keyW');
+        } 
+    })
+})
 </script>
   </body>
 </html>

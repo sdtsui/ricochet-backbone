@@ -19,7 +19,8 @@ window.appModel = Backbone.Model.extend({
             lightYellow: '#E8E549',//background
             lightGrey:  '#66665D',//center walls
             darkGrey: '#51514B'//center square
-        }
+        },
+        boxSize: undefined
     },
     initialize: function(){
         var windowWidth     = $(window).width()
@@ -30,8 +31,18 @@ window.appModel = Backbone.Model.extend({
         this.set({
             windowWidth     : windowWidth,
             windowHeight    : windowHeight,
-            boardModel      : new boardModel({boardWidth: boardWidth})
-        });        
+            boardModel      : new boardModel({
+                boardWidth: boardWidth
+            })
+        });
+        this.on('change:boxSize', function(){
+            var boxSize = this.get('boxSize');
+            var robots = this.get('boardModel').get('robots');
+            _.each(robots.models, function(value, key, list){
+                value.set('boxSize', boxSize);
+                // console.log('robot boxsize updated :' , value.get('boxSize'));
+            }, this)
+        }, this);
     },
     placeRobots: function(){
 

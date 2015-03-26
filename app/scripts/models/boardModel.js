@@ -3,6 +3,7 @@ window.boardModel = Backbone.Model.extend({
         boardWidth: undefined,
         quadrantArrangement: undefined,
         completeBoard: undefined,
+        enteringMove: true,
         baseQuadrants: new quadrantHolder({}),
         rHash : {
             //hash for a 90 degree rotation
@@ -11,7 +12,18 @@ window.boardModel = Backbone.Model.extend({
             S: "W",
             W: "N"
         },
-        robots : undefined
+        robots : undefined,
+        activeRobot: undefined
+    },
+    initialize: function(){
+        this.set('quadrantArrangement', this.setQuads());
+        this.constructBoard(this.get('quadrantArrangement'));
+        this.setRobots();
+        console.log('setRobots: ', this.get('robots'));
+        //N,S,E,W:
+        Backbone.Events.on('keydown', function(e){
+            console.log('boardModel sees keydown', e);
+        }, this)
     },
     rowStringsToArrays : function(quad, size){
         var convertedQuad = [];
@@ -77,7 +89,7 @@ window.boardModel = Backbone.Model.extend({
         var newRobots = [];
         var robotColors = ['R', 'Y', 'G', 'B'];
         //row, col
-        var occupiedSquares = [[8,8], [8,9], [9,8], [9,9]]
+        var occupiedSquares = [[7,7], [7,8], [8,7], [8,8]]
         while(newRobots.length <4){
             var newCoords = [_.random(0,15), _.random(0,15)];
             var row = newCoords[0];
@@ -101,11 +113,14 @@ window.boardModel = Backbone.Model.extend({
                 occupiedSquares.push(newCoords.splice());
                 newRobots.push(new robotModel({
                     color: robotColors.shift(),
-                    row: newCoords[0],
-                    col: newCoords[1]
+                    loc: {
+                        row: newCoords[0],
+                        col: newCoords[1]
+                    },
+                    boxSize: this.get('boxSize'),
+                    boardModel: this
                 }));
             }
-
         }
         this.set('robots', new robots(newRobots));
     },
@@ -113,12 +128,6 @@ window.boardModel = Backbone.Model.extend({
     // },
     // newRound: function(){
     // },
-    initialize: function(){
-        this.set('quadrantArrangement', this.setQuads());
-        this.constructBoard(this.get('quadrantArrangement'));
-        this.setRobots();
-        console.log('setRobots: ', this.get('robots'));
-    },
     constructBoard: function(boardArray){
         var newBoard = [];
         for (var i = 0; i < 8; i++){
