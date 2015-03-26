@@ -12,6 +12,28 @@ window.boardModel = Backbone.Model.extend({
             S: "W",
             W: "N"
         },
+        dHash : {
+            N: {
+                row: -1,
+                col: 0,
+                opposite: 'S'
+            },
+            S: {
+                row: 1,
+                col: 0,
+                opposite: 'N'
+            },
+            E: {
+                row: 0,
+                col: 1,
+                opposite: 'W'
+            },
+            W: {
+                row: 0,
+                col: -1,
+                opposite: 'E'
+            }
+        },
         robots : undefined,
         activeRobot: undefined
     },
@@ -19,7 +41,6 @@ window.boardModel = Backbone.Model.extend({
         this.on('all', function(n){
             console.log('Local Change : ', n);
         })
-
         this.set('quadrantArrangement', this.setQuads());
         this.constructBoard(this.get('quadrantArrangement'));
         this.setRobots();
@@ -30,9 +51,7 @@ window.boardModel = Backbone.Model.extend({
             if (n.slice(0,3) === 'key'){
                 this.respondToKey(n);
             }
-
         }, this);
-
     },
     respondToKey : function(keyName){
         var activeRobot = this.get('activeRobot');
@@ -41,27 +60,97 @@ window.boardModel = Backbone.Model.extend({
         }
     },
     moveRobot : function(dir, robot){
-        var dHash = {
-            N: {
-                row: -1,
-                col: 0
-            },
-            S: {
-                row: 1,
-                col: 0
-            },
-            E: {
-                row: 0,
-                col: 1
-            },
-            W: {
-                row: 0,
-                col: -1
-            }
-        }
         var robotToMove = this.get('robots').where({color: robot})[0];
+        var loc = robotToMove.get('loc');
         console.log('robot props :', robotToMove, robotToMove.attributes);
-        // console.log ('moving ' + robot +' ' + dir);
+        var completeBoard = this.get('completeBoard');
+        var occupiedSquares = this.get('occupiedSquares');
+        /**
+         * Control flow:
+         * if a move in that direction is valid:
+         *  move in that direction, update position, call again
+         * else 
+         *  stop
+         *
+         * if moves === 0, do nothing, disregard click
+         * else
+         *  savePosition, update lastMoveDir,
+         *  update loc...which should trigger a transition.
+         */
+        var next = {
+            nextSquare: undefined,
+            lastValidSquare: undefined,
+            moves: 0
+        }
+        next.nextSquare = this.checkMoveDirValid(loc, dir, robotToMove, completeBoard, occupiedSquares)
+        //if valid, nextSquare is truthy
+        while (next.nextSquare !== false){
+            next.moves++;
+            next.lastValidSquare = next.nextSquare;
+            next.nextSquare = this.checkMoveDirValid(next.nextSquare, dir, robotToMove, completeBoard, occupiedSquares);
+        }
+        if (next.moves === 0){
+            console.log('illegal : nothing happens; should disregard keydown');
+        } else {
+            /**
+             * Finalize move by:
+             *-Update occupiedSquares to keep robotLocations consistent
+             *-Save robot's current location to lastLoc, with savePosition.
+             *-Save robot's last move to dir.
+             * --finally, updating a location, which should trigger an animation
+             */
+            //get current location that is definitely in occupiedSquares
+            /**
+             * splice that location out of the array
+             * copy/save the array, reassign to occupiedSquares
+             */
+            //as an array
+            var lastLoc = [loc.row,loc.col];
+            var lastIndex;
+            _.each(occupiedSquares, function(value,key){
+                if (value[0] === lastLoc[0] && value[1] === lastLoc[1]){
+                    lastIndex = key;
+                }
+            });
+            robotToMove.savePosition();
+            robotToMove.set('lastMoveDir', dir);
+            occupiedSquares.splice(lastIndex,1);
+            occupiedSquares = occupiedSquares.slice()
+            occupiedSquares.push([next.lastValidSquare.row, next.lastValidSquare.col]);
+            this.set('occupiedSquares', occupiedSquares);
+
+            robotToMove.set('loc', next.lastValidSquare);
+            console.log('(DONE) robot moving : ', next.moves, ' in direction : ', dir);
+        }
+    },
+    checkMoveDirValid : function(loc, dir, robot, completeBoard, occupiedSquares){
+        var dHash = this.get('dHash');
+        if (robot.get('lastMoveDir') === dHash[dir].opposite) {
+            //moving back is illegal
+            return false
+        }
+        var robotLoc = loc;
+        if (completeBoard[robotLoc.row][robotLoc.col].indexOf(dir) !== -1){
+            //moving into a wall on this square is illegal
+            return false;
+        }
+        var movement = dHash[dir]
+        var nextSquare = {
+            row: robotLoc.row + movement.row,
+            col: robotLoc.col + movement.col
+        }
+        if (
+            _.some(occupiedSquares, function(value){
+                return ((value[0] === nextSquare.row) && (value[1] === nextSquare.col))
+                //SOME matches, meaning at least 1 match between new location & existing occupiedSquares
+            })
+            )
+        {
+            return false;
+            //ie, next square is occupied
+        }
+        //no conflicts, move is legal
+        return nextSquare;
     },
     rowStringsToArrays : function(quad, size){
         var convertedQuad = [];
@@ -148,7 +237,7 @@ window.boardModel = Backbone.Model.extend({
                 console.log('conflict at  ' + row +"|"+col+ ' trying again');
                 continue;
             } else {
-                occupiedSquares.push(newCoords.splice());
+                occupiedSquares.push(newCoords.slice());
                 newRobots.push(new robotModel({
                     color: robotColors.shift(),
                     loc: {
@@ -161,6 +250,7 @@ window.boardModel = Backbone.Model.extend({
             }
         }
         this.set('robots', new robots(newRobots));
+        this.set('occupiedSquares', occupiedSquares);
     },
     // newGame: function(){
     // },

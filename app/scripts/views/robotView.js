@@ -5,7 +5,11 @@ window.robotView = Backbone.View.extend({
   events: {
   },
   initialize: function(){
-    this.model.on('change:boxSize', this.move, this);
+    this.model.on('change:boxSize', function(){
+      this.setup();
+      this.move();
+    }, this);
+    this.model.on('change:loc', this.move, this);
   },
   render: function(){
     // console.log('in view: this.model.attributes', this.model.attributes);
@@ -15,7 +19,7 @@ window.robotView = Backbone.View.extend({
   activate: function(){
 
   },
-  move: function(dir){
+  setup: function(dir){
     var props = this.model.attributes;
     // console.log('props :', props);
     var boxSize = props.boxSize;
@@ -33,11 +37,16 @@ window.robotView = Backbone.View.extend({
     context.fillStyle = 'white';
     context.font = '20px serif'
     context.fillText("R",boxSize/4,boxSize/2);
+  },
+  move: function(){
+    var props = this.model.attributes;
+    var boxSize = props.boxSize;
+    var robot = $('.'+props.color)
     robot.animate({
         top: 8+(props.loc.row*boxSize+(boxSize*.3)),
         left: 8+(props.loc.col*boxSize+(boxSize*.3)),
         width: boxSize/2,
         height: boxSize/2
-    }, {duration: 500}, function(){});
+    }, {duration: 150}, function(){});
   }
 });
