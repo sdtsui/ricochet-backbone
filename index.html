@@ -1,7 +1,6 @@
 <html>
   <head>
     <meta charset="utf-8">
-
     <title>RicochetBackbone</title>
     <meta name="description" content="Ricochet Robots in Backbone">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,24 +8,50 @@
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script src="node_modules/underscore/underscore-min.js"></script>
     <script src="node_modules/backbone/backbone-min.js"></script>
+
+    <!-- Bootstrap -->
+
+    <link rel="stylesheet" type="text/css" href="node_modules/twitter-bootstrap/docs/assets/css/bootstrap.css">
     <script src="node_modules/twitter-bootstrap/docs/assets/js/bootstrap.min.js">
     </script>
+
+    <!-- Robot CSS -->
     <link rel="stylesheet" type="text/css" href="app/styles/robotStyles.css">
+
+    <!-- Vex Dialogs -->
+    <script type="text/javascript" src="node_modules/vex-js/js/vex.combined.min.js"></script>
+    <script>vex.defaultOptions.className = 'vex-theme-wireframe';</script>
+    <link rel="stylesheet" href="node_modules/vex-js/css/vex.css"/>
+    <link rel="stylesheet" href="node_modules/vex-js/css/vex-theme-wireframe.css"/>
   </head>
   <body>
-    <!-- Backbone Collections -->
-    <!-- Robot Model -->
-    <script src="app/scripts/models/robotModel.js"></script>
-
-    <script src="app/scripts/collections/robots.js"></script>
 
     <!-- Backbone Models -->
     <script src="app/scripts/models/quadrantHolderModel.js"></script>
+    <script src="app/scripts/models/robotModel.js"></script>
     <script src="app/scripts/models/boardModel.js"></script>
     <script src="app/scripts/models/appModel.js"></script>
+    <script src="app/scripts/models/playerModel.js"></script>
+    <script src="app/scripts/models/scoreModel.js"></script>
+
+    <!-- Backbone Collections -->
+    <script src="app/scripts/collections/robots.js"></script>
+    <script src="app/scripts/collections/players.js"></script>
+
+
 
     <!-- Backbone View Templates -->
-    <script src="app/scripts/templates/boardViewTemplate.js"></script>
+    <script id="boardViewTemplate"type='text/template' >
+    <canvas id="boardCanvas" width="<%= boardWidth %>" height="<%= boardWidth %>" style="background: #fff;"></canvas>
+    </script>
+    <script type="text/template" id='boardViewTest' src='app/scripts/templates/boardViewTest.html'>
+    </script>
+
+
+
+
+
+
 
     <!-- Backbone Views -->
     <script src="app/scripts/views/appView.js"></script>
@@ -34,28 +59,62 @@
     <script src="app/scripts/views/boardView.js"></script>
     <script src="app/scripts/views/boardControlsView.js"></script>
     <script src="app/scripts/views/canvasDrawView.js"></script>
+    <script src="app/scripts/views/scoreView.js"></script>
+    <script src="app/scripts/views/playerView.js"></script>
+    <script src="app/scripts/views/playersView.js"></script>
+
+    <script type="text/javascript">
+    //Note to self: refactor out into a separate modal manager file. Potentially a view.
+    var O = function(viewToRender, parentModel){
+        vex.dialog.open({
+          message: 'Let\'s play Ricochet Robots! \n How many players?',
+          input: "<input name=\"players\" type=\"number\" max=\"5\" min=\"1\" placeholder=\"1\" required />",
+          buttons: [
+            $.extend({}, vex.dialog.buttons.YES, {
+              text: 'That many players!'
+            }), $.extend({}, vex.dialog.buttons.NO, {
+              text: 'I don\'t want to play...'
+            })
+          ],
+          callback: function(data) {
+            if (data === false) {
+              return console.log('Placeholder function...redirect to something silly.');
+            }
+            //data.players holds the input.
+            //Now, call the render function with the right number of players....
+            console.log('rendering view. starting game...with', data.players, 'players.');
+            parentModel.set('numPlayers', data.players);
+            viewToRender.render();
+          }
+        });
+    }
+    </script>
 
     <div id="appView"> </div>
-
-
     <script type="text/javascript">
     $(document).on('ready', function(){
         //Instantiate the main appModel instance.
-        window.appModel = new appModel()
-        window.APPDIV = new appView({
-            model: appModel,
+        window.rootModel = new appModel()
+        var APPDIV = new appView({
+            model: rootModel,
             el: $('#appView')
         });
         APPDIV.render();
 
+
+        //**This can be abstracted back into the backbone model...**
         //Draw on canvas.
         var boardDetails = new canvasDrawView({
-            model: appModel
-        }).render();
+            model: rootModel
+        });
+        //Add modal here. 
+        // Get number of players.
+        // TESTING: OFF:
+        // 
+        // 
+        O(boardDetails, rootModel);
     });
     </script>
-
-
 
 <script type="text/javascript">
 //condense this into a clickhandler function to put into boardView eventually,
@@ -74,6 +133,10 @@ $(document).on('ready', function(){
         } 
     })
 })
+
 </script>
+
+
+
   </body>
 </html>

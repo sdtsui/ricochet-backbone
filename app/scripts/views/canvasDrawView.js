@@ -13,11 +13,6 @@ window.canvasDrawView = Backbone.View.extend({
      */
     this.canvasRender(context, boardProps.bw, boardProps.bsize);
     this.drawBoardProps(context, boardProps.bw, boardProps.bsize, completeBoard);
-
-    // setInterval(function(){
-    //   context.rotate(Math.PI);
-    //   console.log('rotate');
-    // },2000);
   },
   getContext: function(){
     var canvas = document.getElementById('boardCanvas');
@@ -64,6 +59,8 @@ window.canvasDrawView = Backbone.View.extend({
               //draw nothing
               continue;
             }
+
+            //Draw shapes based on the propertyString.
             viewCtx.drawWalls(context, boxSize, x, y, squareProps);
             var colorIndex = viewCtx.indexOfColorOrShape(squareProps, "RGBY");
             if (colorIndex !== -1){
@@ -136,7 +133,6 @@ window.canvasDrawView = Backbone.View.extend({
   },
   drawShape: function(context, boxSize, x, y, color, shape){
     var colorHex = this.model.get('colorHex');
-    // console.log("drawing " + color + " " + shape + " at : x y:", x , y)
     if (shape === "Q"){
       context.fillStyle = colorHex[color];
       context.beginPath();
@@ -157,6 +153,7 @@ window.canvasDrawView = Backbone.View.extend({
         false
         )
       context.fill();   
+
       //for borders:
       // context.lineWidth = 5;
       // context.strokeStyle = '#003300';//something else
@@ -183,6 +180,5 @@ window.canvasDrawView = Backbone.View.extend({
     }
   },
   drawRobots: function(){
-    //try using overlaid elements
   }
 });

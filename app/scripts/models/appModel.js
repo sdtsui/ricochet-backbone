@@ -1,12 +1,15 @@
 window.appModel = Backbone.Model.extend({
 
     defaults: {
+        numPlayers: undefined,
+        playerCollection: undefined,
         gameRunning: false,
         roundRunning: false,
         winnerDeclared: false,
         bidManager: undefined,
         tokens: undefined,
         boardModel: undefined,
+        scoreModel: undefined, //handles scores, bids
         robots: undefined,
         players: undefined,
         colorHex: {
@@ -16,9 +19,9 @@ window.appModel = Backbone.Model.extend({
             B: '#0C11CA',
             Y: '#EFEB1D',
             silverBorder: '#ABADA0',
-            lightYellow: '#E8E549',//background
-            lightGrey:  '#66665D',//center walls
-            darkGrey: '#51514B'//center square
+            lightYellow: '#E8E549', //background
+            lightGrey:  '#66665D', //center walls
+            darkGrey: '#51514B' //center square
         },
         boxSize: undefined
     },
@@ -40,12 +43,26 @@ window.appModel = Backbone.Model.extend({
             var robots = this.get('boardModel').get('robots');
             _.each(robots.models, function(value, key, list){
                 value.set('boxSize', boxSize);
-                // console.log('robot boxsize updated :' , value.get('boxSize'));
             }, this)
         }, this);
+
+        this.on('change:numPlayers', function(){
+            var numPlayers = this.get('numPlayers')
+            //define a set of hardcoded new players: allow for name input later..
+            var newPlayers = [];
+            if (numPlayers > 0){
+                var newPlayerNames = ['Player 1', 'Player 2', 'Player 3', 'Player 4'];
+                for (var i = 0 ; i < numPlayers; i++){
+                    console.log('creating a new player:');
+                    newPlayers.push(new playerModel({
+                        username: newPlayerNames[i]
+                    }));
+                }
+                var finalPlayers = new players(newPlayers);
+                this.set('players', finalPlayers);
+            }
+        })
     },
     placeRobots: function(){
-
     }
-
 });

@@ -1,0 +1,65 @@
+.playerBox1{
+    position: relative;
+    border-top: 1px solid #ccd6dd;
+    border-bottom: 1px solid #ccd6dd;
+    border-left: 1px solid #e1e8ed;
+    border-right: 1px solid #e1e8ed;
+    width: 255;
+    height: 105;
+}
+
+.playerBox2{
+    position: relative;
+    border-top: 1px solid #ccd6dd;
+    border-bottom: 1px solid #ccd6dd;
+    border-left: 1px solid #e1e8ed;
+    border-right: 1px solid #e1e8ed;
+    width: 255;
+    height: 105;
+}
+
+
+.form{
+    display: block;
+    margin-top: 0em;
+}
+
+.field{
+    display: block;
+    margin: 6px auto;
+}
+.bid-btn{
+	position: relative;
+    float: left;
+    width: 125px;
+    height: 50px;
+}
+
+input{
+    box-shadow: inset 0 1px 0 #eee,#fff 0 1px 0;
+    font-size: 6px;
+    min-width: 0;
+    width: auto;
+    display: inline;
+    min-height: 25;
+}
+
+.playerHolder{
+    float:left;
+}
+.round-timer{
+	position: relative;
+	float:left;
+	font-size: 85px;
+	font-family: Garamond;
+	text-align: center;
+	top: 15px;
+	display: block;
+	height: 105;
+	width: 125;
+}
+.pointDisplay{
+    font-size: 50;
+    text-align: center;
+
+}

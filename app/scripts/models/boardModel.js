@@ -39,12 +39,14 @@ window.boardModel = Backbone.Model.extend({
     },
     initialize: function(){
         this.on('all', function(n){
-            console.log('Local Change : ', n);
+            //right now, do nothing. 
+            //maybe some responsive blinking??
+            //
+            // console.log('Local Change : ', n);
         })
         this.set('quadrantArrangement', this.setQuads());
         this.constructBoard(this.get('quadrantArrangement'));
         this.setRobots();
-        console.log('setRobots: ', this.get('robots'));
         //N,S,E,W:
         Backbone.Events.on('all', function(n){
             console.log('Global Event : ', n);
@@ -206,10 +208,8 @@ window.boardModel = Backbone.Model.extend({
             for (var j = i; j >0; j--){
                 newQuadrant = this.rotateQuadrant(newQuadrant,8)
             }
-            // console.log("Quadrant : "+ i+ "  :" ,newQuadrant);
             quads.push(newQuadrant);
         }
-        // console.log('quads : ', quads);
         return quads;
     },
     setRobots: function(){
@@ -252,10 +252,6 @@ window.boardModel = Backbone.Model.extend({
         this.set('robots', new robots(newRobots));
         this.set('occupiedSquares', occupiedSquares);
     },
-    // newGame: function(){
-    // },
-    // newRound: function(){
-    // },
     constructBoard: function(boardArray){
         var newBoard = [];
         for (var i = 0; i < 8; i++){
