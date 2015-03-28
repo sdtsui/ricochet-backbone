@@ -27,5 +27,6 @@
 }
 
 #appView{
+    position: relative;
     float: left;
 }

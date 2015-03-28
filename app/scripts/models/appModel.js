@@ -36,7 +36,8 @@ window.appModel = Backbone.Model.extend({
             windowHeight    : windowHeight,
             boardModel      : new boardModel({
                 boardWidth: boardWidth
-            })
+            }),
+            scoreModel      : new scoreModel()
         });
         this.on('change:boxSize', function(){
             var boxSize = this.get('boxSize');

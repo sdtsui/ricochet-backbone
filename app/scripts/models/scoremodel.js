@@ -1,8 +1,9 @@
 window.scoreModel = Backbone.Model.extend({
 	defaults : {
-		timeLeft : 60,
+		timerValue : 60,
 		bidQueue : [],
-		activePlayer : undefined
+		activePlayer : undefined,
+		interval: undefined
 	},
 	initialize: function(){
 		this.on('timeChange', function(){
@@ -24,12 +25,19 @@ window.scoreModel = Backbone.Model.extend({
 		this.on('newBid', function(){
 			//catch the bid, run the timer if runState is still false
 		});
+		console.log('new Score Model!');
+		// this.startTimer();
 	},
 	newRound: function(){
 		//pop off first element of list of tokens, assign target
 	},
 	startTimer: function(){
-
+		this.set('interval', setInterval(function(){
+			this.set('timerValue',
+				this.get('timerValue')-1);
+		}.bind(this)
+			,1000)
+		);
 	},
 	skipTimer: function(){
 		//bring the timer to 0

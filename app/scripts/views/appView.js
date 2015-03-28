@@ -10,10 +10,16 @@ window.appView = Backbone.View.extend({
         this.$el.append(this.boardView.render());
         this.appendRobots();
         Backbone.Events.trigger('boardAssetsRendered');
+        this.playersView = new playersView({
+            model :this.model.get('players'),
+            el: $('#playersView')
+        });
+        // this.$el.append(this.playersView.render());
 
-
-        // console.log('Number of Players: ', num);
-        // this.playerViews = 
+        this.scoreView = new scoreView({
+            el: $('#scoreView'),
+            model: this.model.get('scoreModel')})
+        this.scoreView.render();
     },
     sayHi: function() {
     },

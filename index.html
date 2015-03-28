@@ -10,13 +10,13 @@
     <script src="node_modules/backbone/backbone-min.js"></script>
 
     <!-- Bootstrap -->
-
     <link rel="stylesheet" type="text/css" href="node_modules/twitter-bootstrap/docs/assets/css/bootstrap.css">
     <script src="node_modules/twitter-bootstrap/docs/assets/js/bootstrap.min.js">
     </script>
 
     <!-- Robot CSS -->
     <link rel="stylesheet" type="text/css" href="app/styles/robotStyles.css">
+    <link rel="stylesheet" type="text/css" href="app/styles/buttonAndPlayerStyles.css">
 
     <!-- Vex Dialogs -->
     <script type="text/javascript" src="node_modules/vex-js/js/vex.combined.min.js"></script>
@@ -38,18 +38,48 @@
     <script src="app/scripts/collections/robots.js"></script>
     <script src="app/scripts/collections/players.js"></script>
 
-
-
     <!-- Backbone View Templates -->
     <script id="boardViewTemplate"type='text/template' >
     <canvas id="boardCanvas" width="<%= boardWidth %>" height="<%= boardWidth %>" style="background: #fff;"></canvas>
     </script>
-    <script type="text/template" id='boardViewTest' src='app/scripts/templates/boardViewTest.html'>
+
+
+    <script id='playerViewTemplate' type="text/template">
+    <div class='playerBox1'>
+        <h4>
+            <div align=left>
+                <strong> Player 1 </strong>
+                <div align=right>
+                    Pts: <strong class="pointDisplay">50</strong>
+                </div>
+            </div> 
+        </h4>
+        <form>
+            <div class="field">
+                <input type="number" height="25px" class="text-input" name="playerBid-1" placeholder="23">
+                <button type="submit" class="btn bid-btn">
+                    Place Bid
+                </button>
+            </div>
+        </form>
+    </div>
     </script>
 
+    <script id='scoreViewTemplate'type="text/template">
+        <div class='playerBox1'>
+            <div class="round-timer">
+                <%= timerValue %>
+            </div>
+            <button type="submit" class="btn btn-positive bid-btn">
+                New Game
+            </button>
+            <button type="submit" class="btn btn-positive bid-btn">
+                Skip Timer
+            </button>
+        </div>
+    </div>
 
-
-
+    </script>
 
 
 
@@ -65,7 +95,7 @@
 
     <script type="text/javascript">
     //Note to self: refactor out into a separate modal manager file. Potentially a view.
-    var O = function(viewToRender, parentModel){
+    var O = function(viewsToRender, parentModel){
         vex.dialog.open({
           message: 'Let\'s play Ricochet Robots! \n How many players?',
           input: "<input name=\"players\" type=\"number\" max=\"5\" min=\"1\" placeholder=\"1\" required />",
@@ -84,13 +114,18 @@
             //Now, call the render function with the right number of players....
             console.log('rendering view. starting game...with', data.players, 'players.');
             parentModel.set('numPlayers', data.players);
-            viewToRender.render();
+
+            _.each(viewsToRender, function(view){
+                view.render();
+            });
           }
         });
     }
     </script>
 
     <div id="appView"> </div>
+    <div id="scoreView" class="playerHolder"></div>
+    <div id="playersView" class="playerHolder"></div>
     <script type="text/javascript">
     $(document).on('ready', function(){
         //Instantiate the main appModel instance.
@@ -99,8 +134,6 @@
             model: rootModel,
             el: $('#appView')
         });
-        APPDIV.render();
-
 
         //**This can be abstracted back into the backbone model...**
         //Draw on canvas.
@@ -112,7 +145,7 @@
         // TESTING: OFF:
         // 
         // 
-        O(boardDetails, rootModel);
+        O([APPDIV, boardDetails], rootModel);
     });
     </script>
 
@@ -135,8 +168,5 @@ $(document).on('ready', function(){
 })
 
 </script>
-
-
-
   </body>
 </html>
