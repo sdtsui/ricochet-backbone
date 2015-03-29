@@ -6,6 +6,7 @@ window.scoreModel = Backbone.Model.extend({
 		timeRemaining: true,
 		bidQueue : [],
 		activePlayer : undefined,
+		activeBid: undefined,
 		activeMoves : 0,
 		interval: undefined,
 		startTimerFn: function(){
@@ -41,7 +42,10 @@ window.scoreModel = Backbone.Model.extend({
 		this.on('timeUp', this.timeUp, this);
 		Backbone.Events.on('newBid', this.handleIncomingBid, this);
 
-		this.on('change:target', this.drawCenter, this);
+		this.on('change:targetToken', this.drawCenter, this);
+
+		this.on('successRound', this.activeSuccess, this);
+		this.on('failRound', this.activeFail, this);
 
 		this.timerReset(this)
 	},
@@ -50,21 +54,115 @@ window.scoreModel = Backbone.Model.extend({
 		//if active moves over latest bid, trigger fail event
 		console.log('nawp.');
 		this.set('activeMoves', this.get('activeMoves')+1);
-		console.log('Moves so Far :', this.get('activeMoves'));
+		if (this.get('activeMoves') >= this.get('activeBid').value ){
+			this.trigger('failRound', [this.get('activeBid')]);
+		}
 	},
 	robotArrived: function(){
 		//if active moves under or equal to latest bid, trigger success event
-		console.log('YUP.');
+		//omg, Note to self: trigger can pass event callbacks. This changes things!
+		//Can refactor a lot of events into groups..
+		this.trigger('successRound', [this.get('activeBid')]);
+	},
+	activeSuccess: function(bid){
+		var bid = bid[0]
+		var triggerEnd = function(){
+			this.trigger('endRound');
+		}.bind(this)
+		//assign token object to active bid.player
+		bid.playerModel.addPoint(this.get('targetToken'));
+		vex.dialog.open({
+			message: bid.username + ' wins a point!',
+			buttons: [
+			  $.extend({}, vex.dialog.buttons.YES, {
+			    text: 'Sweet!'
+			})],
+			callback: triggerEnd
+		});
+
+		//Note, this event, which is simply adding a token to playerModel, could be a responded to inside playerModel..
+		//it's just points...but would need Backbone to be 
+	},
+	activeFail: function(bid){
+		var bid = bid[0]
+		vex.dialog.open({
+			message: bid.username + ' failed!',
+			callback: function(){
+				failRound();
+			}
+		});
+		var failRound = function(){
+			var playerTokens = bid.playerModel.get('tokensWon');
+			if (playerTokens.length > 0){
+				this.get('tokensRemaining').push(bid.playerModel.removePoint());
+				this.trigger('change:tokensRemaining')
+			}
+			//decrement active players' points to min 0
+			//if length >0
+			//randomly select a token from active player's array of won tokens, 
+			//	return them to remainingTokens
+			//
+			//dequeue bid, or make sure it's discarded
+			//if more bids, updateActive, keep playing
+			//if no more bids, re-insert the current token to remaining tokens
+			if (this.get('bidQueue').length > 0){
+				Backbone.Events.trigger('resetPosition');
+				this.requestMove();
+			} else {
+				this.get('tokensRemaining').push(this.get('targetToken'));
+				Backbone.Events.trigger('resetPosition');
+				this.trigger('endRound');
+			}
+			this.shuffleTokens();
+			//shuffle the tokens
+			//trigger endRound
+			// this.trigger('endRound');			
+		}.bind(this);
+	},
+	newRound: function(){
+		var runRound = function(){
+			Backbone.Events.trigger('roundStart');
+			this.set('bidQueue', []);
+			this.set('activePlayer', undefined);
+			this.set('activeBid', undefined);
+			this.set('activeMoves', 0); //this could be more modular, resetting functions
+			//can be separate from the new token assignment functions
+			////See activeMoves on 134 (and all other instances of activeMoves)
+
+			//remove token from tokenPool, trigger a new token so canvasDrawView 
+			var remTokens = this.get('tokensRemaining')
+			if (remTokens.length === 0){
+				vex.dialog.open({
+					message:  "Someone (calculate winner)" + " wins!"
+				});
+			} else {
+				this.set('targetToken', remTokens.shift());
+				this.timerReset(this);
+			}
+		}.bind(this);
+
+		vex.dialog.open({
+			message: 'New Round! Ready for the next round?',
+			buttons: [
+			  $.extend({}, vex.dialog.buttons.YES, {
+			    text: 'GO!'
+			  })
+			],
+			callback: function() {
+				runRound();
+			}
+		});		
 	},
 	addToken: function(newToken){
 		var tokens = this.get('tokensRemaining')
 		tokens.push(newToken);
 		if(this.get('tokensRemaining').length === 16){
-			this.shuffleTokens()
+			console.log(this.get('tokensRemaining').length);
+			this.shuffleTokens();
 		}
 	},
 	drawCenter: function(){
-		var target = this.get('target');
+		var target = this.get('targetToken');
 		var grid = {
 			context	: boardDetails.getContext(),
 			box 	: boardDetails.getWidthAndSize(),
@@ -81,23 +179,6 @@ window.scoreModel = Backbone.Model.extend({
 	},
 	shuffleTokens: function(){
 		this.get('tokensRemaining').sort(function(){return Math.random()-0.5;});
-	},
-	newRound: function(){
-		console.log('Starting a new round.');
-			this.set('bidQueue', []);
-			this.set('activePlayer', undefined);
-			this.set('activeMoves', 0); //this could be more modular, resetting functions
-			//can be separate from the new token assignment functions
-
-
-			//remove token from tokenPool, trigger a new token so canvasDrawView 
-			var remTokens = this.get('tokensRemaining')
-			if (remTokens.length === 0){
-				console.log('declare winner');
-			} else {
-				this.set('target', remTokens.shift());
-				this.timerReset(this);
-			}
 	},
 	timerReset : function(ctx){
 		ctx.set('timerValue', 60);
@@ -118,6 +199,8 @@ window.scoreModel = Backbone.Model.extend({
 	},
 	requestMove: function(){
 		var activeBid = this.get('bidQueue').shift();
+		this.set('activeMoves', 0);
+		this.set('activeBid', activeBid);
 		this.set('activePlayer', activeBid.username);
 		vex.dialog.open({
 			message: 'Your move, ' + activeBid.username + '.  Your bid is '+ activeBid.value + ' moves.'
@@ -130,24 +213,6 @@ window.scoreModel = Backbone.Model.extend({
 		//requestMove....
 		this.collateBids();
 		this.requestMove();
-	},
-	activeSuccess: function(player){
-		//assign token object to active player
-		//trigger endRound
-	},
-	activeFail: function(player){
-		//decrement active players' points to min 0
-		//if length >0
-		//randomly select a token from active player's array of won tokens, 
-		//	return them to remainingTokens
-		//
-		//dequeue bid, or make sure it's discarded
-		//if more bids, updateActive, keep playing
-		//if no more bids, re-insert the current token to remaining tokens
-		//
-		//shuffle the tokens
-		//
-		//trigger endRound
 	},
 	updateActive: function(){
 		//(Currently not used, might be a good idea for a refactor)
@@ -191,6 +256,4 @@ window.scoreModel = Backbone.Model.extend({
 			this.startTimer();
 		}
 	}
-	// nextRound: function(){
-	// };
 });

@@ -59,20 +59,12 @@ window.boardModel = Backbone.Model.extend({
         var activeRobot = this.get('activeRobot');
         if (activeRobot && keyName.length === 4){
             this.moveRobot(keyName[3], activeRobot);
-            var activeRobot = this.get('robots').where({color: activeRobot})[0];
-            var target = rootModel.get('scoreModel').get('target');
-            if(activeRobot.get('loc').row === target.loc.row  && activeRobot.get('loc').col === target.loc.col ){
-                Backbone.Events.trigger('robotArrived');
-            }else {
-                Backbone.Events.trigger('robotMoved');
-            }
         }
     },
     moveRobot : function(dir, robot){
         var robotToMove = this.get('robots').where({color: robot})[0];
         var loc = robotToMove.get('loc');
         var completeBoard = this.get('completeBoard');
-        var occupiedSquares = this.get('occupiedSquares');
         /**
          * Control flow:
          * if a move in that direction is valid:
@@ -90,48 +82,35 @@ window.boardModel = Backbone.Model.extend({
             lastValidSquare: undefined,
             moves: 0
         }
-        next.nextSquare = this.checkMoveDirValid(loc, dir, robotToMove, completeBoard, occupiedSquares)
+        next.nextSquare = this.checkMoveDirValid(loc, dir, robotToMove, completeBoard);
         //if valid, nextSquare is truthy
         while (next.nextSquare !== false){
             next.moves++;
             next.lastValidSquare = next.nextSquare;
-            next.nextSquare = this.checkMoveDirValid(next.nextSquare, dir, robotToMove, completeBoard, occupiedSquares);
+            next.nextSquare = this.checkMoveDirValid(next.nextSquare, dir, robotToMove, completeBoard);
         }
         if (next.moves === 0){
             console.log('illegal : nothing happens; should disregard keydown');
         } else {
-            /**
-             * Finalize move by:
-             *-Update occupiedSquares to keep robotLocations consistent
-             *-Save robot's current location to lastLoc, with savePosition.
-             *-Save robot's last move to dir.
-             * --finally, updating a location, which should trigger an animation
-             */
-            //get current location that is definitely in occupiedSquares
-            /**
-             * splice that location out of the array
-             * copy/save the array, reassign to occupiedSquares
-             */
-            //as an array
-            var lastLoc = [loc.row,loc.col];
-            var lastIndex;
-            _.each(occupiedSquares, function(value,key){
-                if (value[0] === lastLoc[0] && value[1] === lastLoc[1]){
-                    lastIndex = key;
-                }
-            });
+
             robotToMove.savePosition();
             robotToMove.set('lastMoveDir', dir);
-            occupiedSquares.splice(lastIndex,1);
-            occupiedSquares = occupiedSquares.slice()
-            occupiedSquares.push([next.lastValidSquare.row, next.lastValidSquare.col]);
-            this.set('occupiedSquares', occupiedSquares);
-
             robotToMove.set('loc', next.lastValidSquare);
-            // console.log('(DONE) robot moving : ', next.moves, ' in direction : ', dir);
+
+            // Checking for arrival, code pasted:
+            var activeRobot = this.get('robots').where({color: robot})[0];
+            var target = rootModel.get('scoreModel').get('targetToken');
+            if((activeRobot.get('loc').row === target.loc.row  && activeRobot.get('loc').col === target.loc.col)//match position
+                &&
+                (activeRobot.get('color') === target.color) // match type
+                ){
+                Backbone.Events.trigger('robotArrived');
+            }else {
+                Backbone.Events.trigger('robotMoved');
+            }
         }
     },
-    checkMoveDirValid : function(loc, dir, robot, completeBoard, occupiedSquares){
+    checkMoveDirValid : function(loc, dir, robot, completeBoard){
         var dHash = this.get('dHash');
         if (robot.get('lastMoveDir') === dHash[dir].opposite) {
             //moving back is illegal
@@ -147,13 +126,7 @@ window.boardModel = Backbone.Model.extend({
             row: robotLoc.row + movement.row,
             col: robotLoc.col + movement.col
         }
-        if (
-            _.some(occupiedSquares, function(value){
-                return ((value[0] === nextSquare.row) && (value[1] === nextSquare.col))
-                //SOME matches, meaning at least 1 match between new location & existing occupiedSquares
-            })
-            )
-        {
+        if (this.get('robots').squareHasConflict(nextSquare)){
             return false;
             //ie, next square is occupied
         }
@@ -222,6 +195,8 @@ window.boardModel = Backbone.Model.extend({
         var newRobots = [];
         var robotColors = ['R', 'Y', 'G', 'B'];
         //row, col
+        //note: occupiedSquares is now only a helper variable. 
+        //no other instances should be in the app
         var occupiedSquares = [[7,7], [7,8], [8,7], [8,8]]
         while(newRobots.length <4){
             var newCoords = [_.random(0,15), _.random(0,15)];
@@ -256,7 +231,6 @@ window.boardModel = Backbone.Model.extend({
             }
         }
         this.set('robots', new robots(newRobots));
-        this.set('occupiedSquares', occupiedSquares);
     },
     constructBoard: function(boardArray){
         var newBoard = [];

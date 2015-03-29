@@ -9,6 +9,10 @@ window.robotModel = Backbone.Model.extend({
 			row: undefined,
 			col: undefined
 		},
+		roundLoc: {
+			row: undefined,
+			col: undefined
+		},
 		boardModel: undefined,
 		boxSize: undefined,
 		lastMoveDir: undefined //still not perfect: 
@@ -23,8 +27,20 @@ window.robotModel = Backbone.Model.extend({
 			Backbone.Events.trigger('robotLocChange');
 		});
 	},
+	setPosition: function(square){
+		//used to set a valid square
+		this.set('loc', square);
+	},
 	savePosition: function(){
 		var lastLoc = this.get('loc');
 		this.set('lastLoc', lastLoc);
+	},
+	saveStartingPosition: function(){
+		var lastLoc = _.clone(this.get('loc'));
+		this.set('roundLoc', lastLoc);
+	},
+	resetPosition: function(){
+		var lastLoc = _.clone(this.get('roundLoc'));
+		this.set('loc', lastLoc);		
 	}
 })

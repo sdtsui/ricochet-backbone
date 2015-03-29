@@ -20,12 +20,12 @@ window.playerModel = Backbone.Model.extend({
 		this.set('cid', this.cid);
 		this.on('change:newestBid', this.handleNewBid, this);
 	},
-	wonToken: function(tokenSym){
-		this.get('tokensWon').push(tokenSym);
-	},
-	getScore: function(){
-		return this.get('tokensWon').length;
-	},
+	// wonToken: function(tokenSym){
+	// 	this.get('tokensWon').push(tokenSym);
+	// },
+	// getScore: function(){
+	// 	return this.get('tokensWon').length;
+	// },
 	handleNewBid : function(){
 		var oldBid = this.get('currentBid');
 		var newBid = this.get('newestBid');
@@ -36,6 +36,24 @@ window.playerModel = Backbone.Model.extend({
 		}
 		this.set('newestBid', undefined);;
 		Backbone.Events.trigger('newBid');
+	},
+	resetBids: function(){
+		this.set('currentBid', 'none');
+	},
+	addPoint: function(newToken){
+		//testing function to push to tokensWon;
+		var oldTokens = _.clone(this.get('tokensWon'));
+		oldTokens.push(newToken)
+		this.set('tokensWon', oldTokens);
+	},
+	removePoint: function(){
+		var tokens = _.clone(this.get('tokensWon'));
+		tokens.sort(function(){return Math.random()-0.5;});
+		lostToken = tokens.shift();
+
+		this.set('tokensWon', tokens);
+		return lostToken;
+			
 	}
     // captureBid: function(e){
     // 	console.log('e :',e);

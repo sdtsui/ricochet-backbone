@@ -1,7 +1,7 @@
 window.playerView = Backbone.View.extend({
 	template: _.template($('#playerViewTemplate').html()),
     initialize: function(){
-    	this.model.on('change:currentBid', this.render, this);
+    	this.model.on('change:currentBid change:tokensWon', this.render, this);
     	this.render();
     },
     render: function(){
