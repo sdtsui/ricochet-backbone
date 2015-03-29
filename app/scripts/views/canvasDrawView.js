@@ -3,7 +3,7 @@ window.canvasDrawView = Backbone.View.extend({
     var context = this.getContext();
     var boardProps = this.getWidthAndSize();
     var completeBoard = this.model.get('boardModel').get('completeBoard');
-    console.log('completeBoard :', completeBoard);
+    // console.log('completeBoard :', completeBoard);
     this.model.set('boxSize', boardProps.bsize);
     /**
      * Render the canvas first, which is a 16x16 grid of grey lines.
@@ -23,7 +23,7 @@ window.canvasDrawView = Backbone.View.extend({
       var bw = this.model.get('boardModel').get('boardWidth');
       var bh = bw;
       var boxSize = (bw-5)/16;
-      console.log('boxSize : ', boxSize);
+      // console.log('boxSize : ', boxSize);
       return {
         bsize: boxSize,
         bw: bw
@@ -66,6 +66,17 @@ window.canvasDrawView = Backbone.View.extend({
             if (colorIndex !== -1){
               var color = squareProps[colorIndex];
               var shape = squareProps[viewCtx.indexOfColorOrShape(squareProps, "CTQH")];
+
+              //add the tokens to scoreModel, so a game can start.
+              var newToken = {
+                color : color,
+                shape : shape,
+                loc   : {
+                  row   : row,
+                  col   : col
+                } 
+              }
+              rootModel.get('scoreModel').addToken(newToken);
               viewCtx.drawShape(context, boxSize, x, y, color, shape);
             }
           }
@@ -131,7 +142,19 @@ window.canvasDrawView = Backbone.View.extend({
       context.strokeStyle = "#66665D";
       context.stroke();
   },
-  drawShape: function(context, boxSize, x, y, color, shape){
+  drawShape: function(context, boxSize, x, y, color, shape, center){
+    if (center){
+      var x = 7*boxSize;
+      var y = 7*boxSize;
+      boxSize *= 2;
+      var p = 0.97
+      var r = [boxSize*p, boxSize*(1-p)]; 
+      //clear the rect
+      context.beginPath();
+      context.clearRect(x+r[1], y+r[1], r[0], r[0]);
+    } else {
+      //placeholder, where all tokens were previously added
+    }
     var colorHex = this.model.get('colorHex');
     if (shape === "Q"){
       context.fillStyle = colorHex[color];

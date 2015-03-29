@@ -9,9 +9,10 @@ window.appModel = Backbone.Model.extend({
         bidManager: undefined,
         tokens: undefined,
         boardModel: undefined,
-        scoreModel: undefined, //handles scores, bids
+        scoreModel: undefined, //handles scores, bids, remaining tokens
         robots: undefined,
         players: undefined,
+        newPlayerNames: undefined,
         colorHex: {
             brown: '#6C4E2F',
             R:'#F21018',
@@ -52,9 +53,9 @@ window.appModel = Backbone.Model.extend({
             //define a set of hardcoded new players: allow for name input later..
             var newPlayers = [];
             if (numPlayers > 0){
-                var newPlayerNames = ['Player 1', 'Player 2', 'Player 3', 'Player 4'];
+                var newPlayerNames = this.get('newPlayerNames');
                 for (var i = 0 ; i < numPlayers; i++){
-                    console.log('creating a new player:');
+                    // console.log('creating a new player:');
                     newPlayers.push(new playerModel({
                         username: newPlayerNames[i]
                     }));

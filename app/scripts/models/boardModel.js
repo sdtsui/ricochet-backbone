@@ -58,7 +58,15 @@ window.boardModel = Backbone.Model.extend({
     respondToKey : function(keyName){
         var activeRobot = this.get('activeRobot');
         if (activeRobot && keyName.length === 4){
+            debugger;
             this.moveRobot(keyName[3], activeRobot);
+            var activeRobot = this.get('robots').where({color: activeRobot})[0];
+            var target = rootModel.get('scoreModel').get('target');
+            if(activeRobot.get('loc').row === target.loc.row  && activeRobot.get('loc').col === target.loc.col ){
+                Backbone.Events.trigger('robotArrived');
+            }else {
+                Backbone.Events.trigger('robotMoved');
+            }
         }
     },
     moveRobot : function(dir, robot){

@@ -1,6 +1,5 @@
 #playersView{
     position:relative;
-    float:left;
 }
 
 .playerBox1{
@@ -9,8 +8,8 @@
     border-bottom: 1px solid #ccd6dd;
     border-left: 1px solid #e1e8ed;
     border-right: 1px solid #e1e8ed;
-    width: 255;
-    height: 105;
+    width: 350;
+    height: 115;
 }
 
 .playerBox2{
@@ -23,15 +22,23 @@
     height: 105;
 }
 
+/*.leftText{
+    float:left;
+}
+.rightText{
+    float:left;
+    text-align: right;
+    right: 0px;
+
+}*/
 
 .form{
     display: block;
     margin-top: 0em;
 }
 
-.field{
-    display: block;
-    margin: 6px auto;
+.bidfield{
+
 }
 .bid-btn{
 	position: relative;
@@ -50,6 +57,14 @@ input{
 }
 
 .playerHolder{
+    position: absolute;
+}
+.scoreHolder{
+    position:block;
+    float:left;
+}
+
+.p-sViewHolder{
     float:left;
 }
 .round-timer{
@@ -66,5 +81,9 @@ input{
 .pointDisplay{
     font-size: 50;
     text-align: center;
+}
 
+.nameDisplay{
+    font-size: 18;
+    text-align: center;
 }

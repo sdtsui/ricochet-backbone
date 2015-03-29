@@ -45,24 +45,26 @@
 
 
     <script id='playerViewTemplate' type="text/template">
-    <div class='playerBox1'>
-        <h4>
-            <div align=left>
-                <strong> Player 1 </strong>
-                <div align=right>
-                    Pts: <strong class="pointDisplay">50</strong>
-                </div>
-            </div> 
-        </h4>
-        <form>
-            <div class="field">
-                <input type="number" height="25px" class="text-input" name="playerBid-1" placeholder="23">
-                <button type="submit" class="btn bid-btn">
-                    Place Bid
-                </button>
-            </div>
-        </form>
-    </div>
+    <h4>
+        <div class='leftText'>
+            <strong> 
+                <%= username %>
+             </strong>
+        </div> 
+        <div class='rightText' align=right>
+            Bid:
+            <strong class="pointDisplay"> <%= currentBid %></strong>
+            \\ Pts: <strong class="pointDisplay">
+            <%= tokensWon.length %>
+            </strong>
+        </div>
+    </h4>
+        <div class="bidfield">
+            <input type="number" height="25px" class="text-input" name="playerBid-1" placeholder=<%= currentBid %>>
+            <button class="btn bid-btn" data-id=<%= cid %> >
+                Place Bid
+            </button>
+        </div>
     </script>
 
     <script id='scoreViewTemplate'type="text/template">
@@ -70,16 +72,20 @@
             <div class="round-timer">
                 <%= timerValue %>
             </div>
-            <button type="submit" class="btn btn-positive bid-btn">
+            <button type="submit" class="btn btn-positive bid-btn" 
+            onClick='Backbone.Events.trigger("nextRound");'>
                 New Game
             </button>
-            <button type="submit" class="btn btn-positive bid-btn">
+            <button type="submit" class="btn btn-positive bid-btn"
+            onClick='Backbone.Events.trigger("skipTimer");'>
                 Skip Timer
             </button>
         </div>
-    </div>
+    </script>
+    <script id='dialogTemplate'type="text/template">
 
     </script>
+
 
 
 
@@ -93,39 +99,18 @@
     <script src="app/scripts/views/playerView.js"></script>
     <script src="app/scripts/views/playersView.js"></script>
 
-    <script type="text/javascript">
-    //Note to self: refactor out into a separate modal manager file. Potentially a view.
-    var O = function(viewsToRender, parentModel){
-        vex.dialog.open({
-          message: 'Let\'s play Ricochet Robots! \n How many players?',
-          input: "<input name=\"players\" type=\"number\" max=\"5\" min=\"1\" placeholder=\"1\" required />",
-          buttons: [
-            $.extend({}, vex.dialog.buttons.YES, {
-              text: 'That many players!'
-            }), $.extend({}, vex.dialog.buttons.NO, {
-              text: 'I don\'t want to play...'
-            })
-          ],
-          callback: function(data) {
-            if (data === false) {
-              return console.log('Placeholder function...redirect to something silly.');
-            }
-            //data.players holds the input.
-            //Now, call the render function with the right number of players....
-            console.log('rendering view. starting game...with', data.players, 'players.');
-            parentModel.set('numPlayers', data.players);
+    <script type="text/javascript" src="app/scripts/dialogs/introDialogs.js"></script>
+<div class="content_container">
+            <div style="float: left;">
+              <div id="appView"> </div>
+            </div>
+            <div style="float: left;">
+                    <!-- <div id="scoreView" id='playersView' class="scoreHolder"></div> -->
+                    <div id="playersView" class="playerHolder"></div>
+            </div>
+</div>
+    
 
-            _.each(viewsToRender, function(view){
-                view.render();
-            });
-          }
-        });
-    }
-    </script>
-
-    <div id="appView"> </div>
-    <div id="scoreView" class="playerHolder"></div>
-    <div id="playersView" class="playerHolder"></div>
     <script type="text/javascript">
     $(document).on('ready', function(){
         //Instantiate the main appModel instance.
@@ -137,7 +122,7 @@
 
         //**This can be abstracted back into the backbone model...**
         //Draw on canvas.
-        var boardDetails = new canvasDrawView({
+        window.boardDetails = new canvasDrawView({
             model: rootModel
         });
         //Add modal here. 
@@ -154,17 +139,21 @@
 //makes more sense there than in a random script
 $(document).on('ready', function(){
     $(document.body).on('keydown', function(e){
-        var keyCode = e.keyCode;
-        if (e.keyCode === 38){
-            Backbone.Events.trigger('keyN');
-        } else if (e.keyCode === 40) {
-            Backbone.Events.trigger('keyS');
-        } else if (e.keyCode === 39) {
-            Backbone.Events.trigger('keyE');
-        } else if (e.keyCode === 37) {
-            Backbone.Events.trigger('keyW');
-        } 
-    })
+        if (rootModel.get('scoreModel').get('activePlayer') !== undefined){
+            var keyCode = e.keyCode;
+            if (e.keyCode === 38){
+                Backbone.Events.trigger('keyN');
+            } else if (e.keyCode === 40) {
+                Backbone.Events.trigger('keyS');
+            } else if (e.keyCode === 39) {
+                Backbone.Events.trigger('keyE');
+            } else if (e.keyCode === 37) {
+                Backbone.Events.trigger('keyW');
+            } 
+        } else {
+            console.log('no active player');
+        }
+    });
 })
 
 </script>
