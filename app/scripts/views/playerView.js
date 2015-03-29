@@ -5,7 +5,6 @@ window.playerView = Backbone.View.extend({
     	this.render();
     },
     render: function(){
-    	console.log('rerendering...');
     	this.$el.html(this.template(this.model.attributes));
     	return this.$el;
     }

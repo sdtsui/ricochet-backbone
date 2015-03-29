@@ -27,7 +27,6 @@ window.playerModel = Backbone.Model.extend({
 		return this.get('tokensWon').length;
 	},
 	handleNewBid : function(){
-		console.log('handling new bid');
 		var oldBid = this.get('currentBid');
 		var newBid = this.get('newestBid');
 		if (oldBid === 'none'){

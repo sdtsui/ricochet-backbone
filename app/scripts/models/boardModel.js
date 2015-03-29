@@ -49,7 +49,7 @@ window.boardModel = Backbone.Model.extend({
         this.setRobots();
         //N,S,E,W:
         Backbone.Events.on('all', function(n){
-            console.log('Global Event : ', n);
+            // console.log('Global Event : ', n);
             if (n.slice(0,3) === 'key'){
                 this.respondToKey(n);
             }
@@ -58,7 +58,6 @@ window.boardModel = Backbone.Model.extend({
     respondToKey : function(keyName){
         var activeRobot = this.get('activeRobot');
         if (activeRobot && keyName.length === 4){
-            debugger;
             this.moveRobot(keyName[3], activeRobot);
             var activeRobot = this.get('robots').where({color: activeRobot})[0];
             var target = rootModel.get('scoreModel').get('target');
@@ -72,7 +71,6 @@ window.boardModel = Backbone.Model.extend({
     moveRobot : function(dir, robot){
         var robotToMove = this.get('robots').where({color: robot})[0];
         var loc = robotToMove.get('loc');
-        console.log('robot props :', robotToMove, robotToMove.attributes);
         var completeBoard = this.get('completeBoard');
         var occupiedSquares = this.get('occupiedSquares');
         /**
@@ -130,7 +128,7 @@ window.boardModel = Backbone.Model.extend({
             this.set('occupiedSquares', occupiedSquares);
 
             robotToMove.set('loc', next.lastValidSquare);
-            console.log('(DONE) robot moving : ', next.moves, ' in direction : ', dir);
+            // console.log('(DONE) robot moving : ', next.moves, ' in direction : ', dir);
         }
     },
     checkMoveDirValid : function(loc, dir, robot, completeBoard, occupiedSquares){

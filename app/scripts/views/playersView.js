@@ -8,7 +8,7 @@ window.playersView = Backbone.View.extend({
 			var bid = btn.siblings()[0].valueAsNumber;
 			var player = this.model.get(id);
 			player.set('newestBid', bid);
-			console.log("Bid Set : ", player.get('username'));
+			// console.log("Bid Set : ", player.get('username'));
 		},
 	},
 	playersViews : [],

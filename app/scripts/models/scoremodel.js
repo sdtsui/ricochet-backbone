@@ -21,7 +21,6 @@ window.scoreModel = Backbone.Model.extend({
 			var checkInterval = setInterval(function(){
 				if (this.get('timerValue') <= 0){
 					clearInterval(this.get('interval'));
-					console.log('timeUp!');
 					this.trigger('timeUp');
 					clearInterval(checkInterval);
 					this.set('timerValue', 0);
@@ -30,12 +29,8 @@ window.scoreModel = Backbone.Model.extend({
 		}
 	},
 	initialize: function(){
-		Backbone.Events.on('robotMoved', function(){
-			console.log('nawp.');
-			this.set('activeMoves', this.get('activeMoves')+1);
-			console.log('Moves so Far :', this.get('activeMoves'));
-		}, this)
-		Backbone.Events.on('robotArrived', function(){console.log('YUP.');}, this)
+		Backbone.Events.on('robotMoved', this.robotMoved, this)
+		Backbone.Events.on('robotArrived', this.robotArrived, this)
 
 		this.on('change:timerValue', this.checkTimer, this);
 		Backbone.Events.on('skipTimer', this.skipTimer, this);
@@ -50,12 +45,22 @@ window.scoreModel = Backbone.Model.extend({
 
 		this.timerReset(this)
 	},
+	robotMoved: function(){
+		//increment active moves.
+		//if active moves over latest bid, trigger fail event
+		console.log('nawp.');
+		this.set('activeMoves', this.get('activeMoves')+1);
+		console.log('Moves so Far :', this.get('activeMoves'));
+	},
+	robotArrived: function(){
+		//if active moves under or equal to latest bid, trigger success event
+		console.log('YUP.');
+	},
 	addToken: function(newToken){
 		var tokens = this.get('tokensRemaining')
 		tokens.push(newToken);
 		if(this.get('tokensRemaining').length === 16){
 			this.shuffleTokens()
-			console.log(tokens);
 		}
 	},
 	drawCenter: function(){
@@ -78,15 +83,19 @@ window.scoreModel = Backbone.Model.extend({
 		this.get('tokensRemaining').sort(function(){return Math.random()-0.5;});
 	},
 	newRound: function(){
-		console.log('start a new round! GOGOGO');
+		console.log('Starting a new round.');
 			this.set('bidQueue', []);
 			this.set('activePlayer', undefined);
+			this.set('activeMoves', 0); //this could be more modular, resetting functions
+			//can be separate from the new token assignment functions
+
+
 			//remove token from tokenPool, trigger a new token so canvasDrawView 
 			var remTokens = this.get('tokensRemaining')
 			if (remTokens.length === 0){
 				console.log('declare winner');
 			} else {
-				this.set('target', this.get('tokensRemaining').shift());
+				this.set('target', remTokens.shift());
 				this.timerReset(this);
 			}
 	},
@@ -117,25 +126,31 @@ window.scoreModel = Backbone.Model.extend({
 		//assign a listener...for winning. remove that listener when needed.
 	},
 	timeUp: function(){
-		console.log('timeUp called!');
 		//collate bids.
 		//requestMove....
 		this.collateBids();
 		this.requestMove();
 	},
 	activeSuccess: function(player){
-		//assign point to active player
+		//assign token object to active player
 		//trigger endRound
 	},
 	activeFail: function(player){
 		//decrement active players' points to min 0
-		//add a token from the active player, back into the tokenPool
+		//if length >0
+		//randomly select a token from active player's array of won tokens, 
+		//	return them to remainingTokens
 		//
-		//dequeue
+		//dequeue bid, or make sure it's discarded
 		//if more bids, updateActive, keep playing
-		//if no more bids, re-insert the current token, shuffle the tokens
+		//if no more bids, re-insert the current token to remaining tokens
+		//
+		//shuffle the tokens
+		//
+		//trigger endRound
 	},
 	updateActive: function(){
+		//(Currently not used, might be a good idea for a refactor)
 		//takes the first element of the queue, assigns the owner of that bid to 'active player'
 	},
 	collateBids: function(){
@@ -169,9 +184,9 @@ window.scoreModel = Backbone.Model.extend({
 		this.set('bidQueue', []);
 	},
 	handleIncomingBid: function(){
+		//This WHOLE FUNCTION MAY NOT BE NECESSARY; it only starts the timer **
 		//responding to a new bid trigger event;
 		var x = $('.bidfield > input');
-		console.log(x);
 		if (!this.get('activePlayer')){
 			this.startTimer();
 		}

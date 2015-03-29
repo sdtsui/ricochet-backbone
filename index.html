@@ -139,6 +139,7 @@
 //makes more sense there than in a random script
 $(document).on('ready', function(){
     $(document.body).on('keydown', function(e){
+        //only act if there is an active player to win the point...
         if (rootModel.get('scoreModel').get('activePlayer') !== undefined){
             var keyCode = e.keyCode;
             if (e.keyCode === 38){
@@ -150,8 +151,6 @@ $(document).on('ready', function(){
             } else if (e.keyCode === 37) {
                 Backbone.Events.trigger('keyW');
             } 
-        } else {
-            console.log('no active player');
         }
     });
 })
