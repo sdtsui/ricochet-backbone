@@ -1,6 +1,6 @@
 window.robotView = Backbone.View.extend({
   template: _.template(
-    '<canvas class="<%= color %>" id="extra" width="25px" height="25px">R</canvas>'
+    '<canvas class="<%= color %>" id="extra" width="40px" height="40px"></canvas>'
     ),
   events: {
   },
@@ -37,12 +37,77 @@ window.robotView = Backbone.View.extend({
       this.activate();
     }.bind(this));
 
-
+    var colors = rootModel.get('colorHex');
     //Placeholder code to draw a symbol on the canvas for one robot. *break off into a fn*
-    var context = robot[0].getContext('2d')
-    context.fillStyle = 'white';
-    context.font = '20px serif'
-    context.fillText("R",boxSize/4,boxSize/2);
+    var context = robot[0].getContext('2d');
+
+    context.beginPath();
+    for (var i = 0 * Math.PI; i < 2 * Math.PI; i += 0.01 ) {
+        xPos = 20 - (10 * Math.sin(i)) * Math.sin(0.5 * Math.PI) + (20 * Math.cos(i)) * Math.cos(0.5 * Math.PI);
+        yPos = 20 + (20 * Math.cos(i)) * Math.sin(0.5 * Math.PI) + (10 * Math.sin(i)) * Math.cos(0.5 * Math.PI);
+
+        if (i == 0) {
+            context.moveTo(xPos, yPos);
+        } else {
+            context.lineTo(xPos, yPos);
+        }
+    }
+    context.lineWidth = 1;
+    context.strokeStyle = 'black';
+    context.fillStyle = colors[props.color];
+    context.closePath();
+    context.stroke();
+    context.fill();
+
+    context.beginPath();
+    for (var i = 0 * Math.PI; i < 2 * Math.PI; i += 0.01 ) {
+        xPos = 20 - (10 * Math.sin(i)) * Math.sin(1 * Math.PI) + (20 * Math.cos(i)) * Math.cos(1 * Math.PI);
+        yPos = 20 + (20 * Math.cos(i)) * Math.sin(1 * Math.PI) + (10 * Math.sin(i)) * Math.cos(1 * Math.PI);
+
+        if (i == 0) {
+            context.moveTo(xPos, yPos);
+        } else {
+            context.lineTo(xPos, yPos);
+        }
+    }
+    context.lineWidth = 1;
+    context.strokeStyle = 'black';
+    context.fillStyle = colors[props.color];
+    context.closePath();
+    context.stroke();
+    context.fill();
+
+
+    context.beginPath();
+    context.fillStyle = colors[props.color];
+    context.arc(20,20,16,0,Math.PI*2);
+    context.fill()
+    context.lineWidth = 1.5;
+    context.strokeStyle = 'black';
+    context.stroke();
+
+
+    context.beginPath();
+    context.arc(20,20,10,Math.PI*-.25,Math.PI*.25);
+    context.lineWidth = 2;
+    context.strokeStyle = 'black';
+    context.stroke();
+
+    context.beginPath();
+    context.arc(20,20,10,Math.PI*.75,Math.PI*1.25);
+    context.stroke();
+
+    //draw a circle inside, draw arcs inside the smaller circle
+    //
+    //LEFT:
+    //Draw an ellipse, that stretches outside the robot
+    //Draw a dot in the middle
+    //Draw a thick arc
+    //remove backgrounds..
+    context.beginPath();
+    context.lineWidth = 1;
+    context.arc(20,20,3,0,Math.PI*2);
+    context.stroke();
   },
 
   /**
@@ -52,11 +117,12 @@ window.robotView = Backbone.View.extend({
     var props = this.model.attributes;
     var boxSize = props.boxSize;
     var robot = $('.'+props.color)
+    console.log(boxSize);
     robot.animate({
-        top: (props.loc.row*boxSize+(boxSize*.3)),
-        left: (props.loc.col*boxSize+(boxSize*.3)),
-        width: boxSize/2,
-        height: boxSize/2
+        top: (props.loc.row*boxSize+(boxSize*.1)+2),
+        left: (props.loc.col*boxSize+(boxSize*.1)+2),
+        width: boxSize*.8,
+        height: boxSize*.8
     }, {duration: 150}, function(){});
   }
 });

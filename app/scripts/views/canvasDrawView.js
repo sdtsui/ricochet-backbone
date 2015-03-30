@@ -3,6 +3,16 @@ window.canvasDrawView = Backbone.View.extend({
     var context = this.getContext();
     var boardProps = this.getWidthAndSize();
     var completeBoard = this.model.get('boardModel').get('completeBoard');
+    //start by filling board with background:
+    //
+    var canvas  = $('#boardCanvas');
+    var width = canvas.attr('width');
+    var height = canvas.attr('height');
+
+    var colorHash = this.model.get('colorHex');
+    context.fillStyle = colorHash['background'];
+    context.rect(0,0, width, height);
+    context.fill();
     // console.log('completeBoard :', completeBoard);
     this.model.set('boxSize', boardProps.bsize);
     /**
@@ -55,7 +65,11 @@ window.canvasDrawView = Backbone.View.extend({
             var x = p+(col*boxSize);
             var y = p+(row*boxSize);
             var squareProps = completeBoard[row][col];
-            //Draw a lihgt background...on all tokens?
+
+            /**
+             * Placeholder, to draw background on squares.
+             */
+            
             if (squareProps === "X"){
               //draw nothing
               continue;
@@ -95,6 +109,18 @@ window.canvasDrawView = Backbone.View.extend({
       }
     }
     return -1;
+  },
+  drawBackgroundX: function(context, boxSize, x, y){
+    /**
+     * 8 grey dots
+     * grey border square
+     * darkgrey minisquare
+     * yellow stripes moving diag..REALLY close to offwhite color, lil'yellow
+     *
+     * offwhite center sq...as huge border to block off missmatch from lines
+     */
+    
+
   },
   drawWalls: function(context, boxSize, x, y, propString){
     // if(propString === "E"){
@@ -153,6 +179,8 @@ window.canvasDrawView = Backbone.View.extend({
       //clear the rect
       context.beginPath();
       context.clearRect(x+r[1], y+r[1], r[0], r[0]);
+      context.fillStyle = '#51514B';
+      context.fillRect(x+r[1], y+r[1], r[0], r[0]);
     } else {
       //placeholder, where all tokens were previously added
     }
@@ -304,5 +332,6 @@ window.canvasDrawView = Backbone.View.extend({
     }
   },
   drawRobots: function(){
+    //see robotView. these have been refactored out into a separate canvas for animation
   }
 });

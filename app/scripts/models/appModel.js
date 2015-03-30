@@ -19,11 +19,16 @@ window.appModel = Backbone.Model.extend({
             G: '#39CC36',
             B: '#0C11CA',
             Y: '#EFEB1D',
-            silverBorder: '#72736D',
-            silverLight: '#ABADA0', 
-            lightYellow: '#E8E549', //background
-            lightGrey:  '#66665D', //center walls
-            darkGrey: '#51514B' //center square
+            silverBorder    : '#72736D',
+            silverLight     : '#ABADA0', //tiny xSquare dots
+            lightYellow     : '#E8E549', //background
+            lightGrey       : '#66665D', //center walls
+            darkGrey        : '#51514B', //center square
+            background      : '#E7D4B0', //grey, orange tint
+            xSquareBorder   : '#ABADA0', //tiny xSquare dots
+            xSquareBg       : '#D4D7C7',//offwhite
+            xSquareG        : '#9B9D92',
+            xSquareY        : '#DDE94A'
         },
         boxSize: undefined
     },
