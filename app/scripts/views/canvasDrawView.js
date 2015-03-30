@@ -55,6 +55,7 @@ window.canvasDrawView = Backbone.View.extend({
             var x = p+(col*boxSize);
             var y = p+(row*boxSize);
             var squareProps = completeBoard[row][col];
+            //Draw a lihgt background...on all tokens?
             if (squareProps === "X"){
               //draw nothing
               continue;
@@ -165,6 +166,37 @@ window.canvasDrawView = Backbone.View.extend({
       context.lineTo(x+boxSize*.25, y+boxSize*.75);
       context.closePath();
       context.fill();
+      context.lineWidth = 3;
+      context.strokeStyle = colorHex['silverBorder'];
+      context.stroke();
+
+
+      context.fillStyle = colorHex['silverBorder'];
+      context.beginPath();
+      context.arc(
+        x+boxSize*.5,
+        y+boxSize*.5,
+        boxSize*.14,
+        0, 2*Math.PI,
+        false
+        )
+      context.fill();
+
+      context.beginPath();
+      for (var i = 0 * Math.PI; i < 2 * Math.PI; i += 0.01 ) {
+          xPos = x+boxSize*.51 - (boxSize*.04 * Math.sin(i)) * Math.sin(0.76 * Math.PI) + (boxSize*.31 * Math.cos(i)) * Math.cos(0.76 * Math.PI);
+          yPos = y+boxSize*.51 + (boxSize*.31 * Math.cos(i)) * Math.sin(0.76 * Math.PI) + (boxSize*.04 * Math.sin(i)) * Math.cos(0.76 * Math.PI);
+
+          if (i == 0) {
+              context.moveTo(xPos, yPos);
+          } else {
+              context.lineTo(xPos, yPos);
+          }
+      }
+      context.lineWidth = 2;
+      context.strokeStyle = colorHex['silverBorder'];
+      context.stroke();
+
     } else if (shape === "C"){
       context.fillStyle = colorHex[color];
       context.beginPath();
@@ -175,12 +207,41 @@ window.canvasDrawView = Backbone.View.extend({
         0, 2*Math.PI,
         false
         )
-      context.fill();   
-
-      //for borders:
-      // context.lineWidth = 5;
-      // context.strokeStyle = '#003300';//something else
-      // context.stroke();         
+      context.fill();
+      context.lineWidth = 3;
+      context.strokeStyle = colorHex['silverBorder'];
+      context.stroke();
+      context.beginPath();
+      // context.moveTo(x+boxSize*.5, y+boxSize*.5);
+      var u = 15;
+      var ap ={//arc points
+        // x     : 2 ,
+        // y     : 2,
+        // r     : 1,
+        a1    : 0.37*Math.PI,
+        a2    : 1.25*Math.PI
+      }
+      // var bp ={ //bezierPoints
+      //   cp1x  : 1.4,
+      //   cp1y  : 1.19,
+      //   cp2x  : 0.93,
+      //   cp2y  : 2.24,
+      //   x     : 1.69,
+      //   y     : 2.95
+      // }
+      // context.arc(ap.x*u, ap.y*u, ap.r*u, ap.a1, ap.a2);
+      // context.bezierCurveTo(bp.cp1x *u, bp.cp1y*u, bp.cp2x*u, bp.cp2y*u, bp.x*u, bp.y*u)//Fill the moon contour and projection
+      // context.arc(x, y, ap.r*u, ap.a1, ap.a2);
+      // context.bezierCurveTo(bp.cp1x *u, bp.cp1y*u, bp.cp2x*u, bp.cp2y*u, bp.x*u, bp.y*u)//Fill the moon contour and projection
+      context.arc(x+boxSize*.5, y+boxSize*.5, boxSize*.16, ap.a1, ap.a2);
+      // context.bezierCurveTo(x+bp.cp1x *u, y+bp.cp1y*u, x+bp.cp2x*u, y+bp.cp2y*u, x+bp.x*u, y+bp.y*u)//Fill the moon contour and projection
+      //gave bezierCurves an honest shot.
+      //
+      context.lineWidth = 0.08*boxSize;
+      context.strokeStyle = colorHex['silverBorder']
+      context.stroke();
+      context.fillStyle = colorHex['silverBorder'];
+      context.fill()
     } else if (shape === "T"){
       context.fillStyle = colorHex[color];
       context.beginPath();
@@ -188,18 +249,58 @@ window.canvasDrawView = Backbone.View.extend({
       context.lineTo(x+boxSize*.75, y+boxSize*.75);
       context.lineTo(x+boxSize*.5, y+boxSize*.25);
       context.closePath();
+      context.strokeStyle = colorHex['silverBorder'];
+      context.lineWidth = 0.11 * boxSize;
+      context.stroke();
       context.fill();
+
+      context.strokeStyle = colorHex['silverBorder'];
+      context.beginPath();
+      context.arc(
+        x+boxSize*.5,
+        y+boxSize*.59,
+        boxSize*.14,
+        0, 2*Math.PI,
+        false
+        )
+      context.lineWidth = boxSize*0.05;
+      context.stroke();
     } else if (shape === "H"){
       context.fillStyle = colorHex[color];
       context.beginPath();
-      context.moveTo(x+boxSize*.2, y+boxSize*.7);
-      context.lineTo(x+boxSize*.2, y+boxSize*.3);
-      context.lineTo(x+boxSize*.5, y+boxSize*.15);
-      context.lineTo(x+boxSize*.8, y+boxSize*.3);
-      context.lineTo(x+boxSize*.8, y+boxSize*.7);
-      context.lineTo(x+boxSize*.5, y+boxSize*.85);
+      context.moveTo(x+boxSize*.2, y+boxSize*.7); //bottom left
+      context.lineTo(x+boxSize*.2, y+boxSize*.3); //top left
+      context.lineTo(x+boxSize*.5, y+boxSize*.15); //top top
+      context.lineTo(x+boxSize*.8, y+boxSize*.3); //top right
+      context.lineTo(x+boxSize*.8, y+boxSize*.7); //bottom right
+      context.lineTo(x+boxSize*.5, y+boxSize*.85); //bottom bottom
       context.closePath();
       context.fill();
+      context.strokeStyle = colorHex['silverBorder'];
+      context.lineWidth = boxSize*.06;
+      context.stroke();
+
+      var cp = {//centerpoint
+        x: x+boxSize*.5,
+        y: y+boxSize*.5,//x and y coords
+        r1: boxSize*.06,//range 1
+        r2: boxSize*.4,//range 2
+      }
+
+      context.fillStyle = colorHex['silverBorder'];
+      context.strokeStyle = colorHex['silverBorder'];
+      context.lineWidth = boxSize*.02;
+      context.beginPath();
+      context.moveTo(cp.x-cp.r1, cp.y-cp.r1); //r1 top left
+      context.lineTo(cp.x, cp.y-cp.r2); // toptoptop
+      context.lineTo(cp.x+cp.r1, cp.y-cp.r1); // r1 top right
+      context.lineTo(cp.x+cp.r2, cp.y); // right right
+      context.lineTo(cp.x+cp.r1, cp.y+cp.r1); // r1 bot right
+      context.lineTo(cp.x, cp.y+cp.r2); // botbotbot
+      context.lineTo(cp.x-cp.r1, cp.y+cp.r1); // r1 bot left
+      context.lineTo(cp.x-cp.r2, cp.y); // left left
+      context.closePath();
+      context.fill()
     }
   },
   drawRobots: function(){

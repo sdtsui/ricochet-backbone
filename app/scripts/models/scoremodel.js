@@ -44,10 +44,14 @@ window.scoreModel = Backbone.Model.extend({
 
 		this.on('change:targetToken', this.drawCenter, this);
 
+		this.on('successRound failRound endRound newGame', this.resetActive, this);
 		this.on('successRound', this.activeSuccess, this);
 		this.on('failRound', this.activeFail, this);
 
 		this.timerReset(this)
+	},
+	resetActive: function(){
+		this.set('activePlayer', undefined);
 	},
 	robotMoved: function(){
 		//increment active moves.
@@ -63,6 +67,7 @@ window.scoreModel = Backbone.Model.extend({
 		//omg, Note to self: trigger can pass event callbacks. This changes things!
 		//Can refactor a lot of events into groups..
 		this.trigger('successRound', [this.get('activeBid')]);
+
 	},
 	activeSuccess: function(bid){
 		var bid = bid[0]
@@ -119,11 +124,10 @@ window.scoreModel = Backbone.Model.extend({
 			// this.trigger('endRound');			
 		}.bind(this);
 	},
-	newRound: function(){
+	newRound: function(test){
 		var runRound = function(){
 			Backbone.Events.trigger('roundStart');
 			this.set('bidQueue', []);
-			this.set('activePlayer', undefined);
 			this.set('activeBid', undefined);
 			this.set('activeMoves', 0); //this could be more modular, resetting functions
 			//can be separate from the new token assignment functions
@@ -141,17 +145,21 @@ window.scoreModel = Backbone.Model.extend({
 			}
 		}.bind(this);
 
-		vex.dialog.open({
-			message: 'New Round! Ready for the next round?',
-			buttons: [
-			  $.extend({}, vex.dialog.buttons.YES, {
-			    text: 'GO!'
-			  })
-			],
-			callback: function() {
-				runRound();
-			}
-		});		
+		if (test){
+			runRound();
+		}else{
+			vex.dialog.open({
+				message: 'New Round! Ready for the next round?',
+				buttons: [
+				  $.extend({}, vex.dialog.buttons.YES, {
+				    text: 'GO!'
+				  })
+				],
+				callback: function() {
+					runRound();
+				}
+			});		
+		}
 	},
 	addToken: function(newToken){
 		var tokens = this.get('tokensRemaining')

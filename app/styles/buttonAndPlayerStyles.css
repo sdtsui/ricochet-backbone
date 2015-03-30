@@ -1,3 +1,8 @@
+.rotated {
+    transition        : 2.5s linear;
+    -webkit-transform : rotate(2880deg);
+}
+
 #playersView{
     position:relative;
 }

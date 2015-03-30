@@ -1,4 +1,18 @@
-var O = function(viewsToRender, parentModel){
+var O = function(viewsToRender, parentModel, test){
+    if(test){
+        var playerNames = ["P1", "P2", "P3", "P4"];
+        // console.log('Player Names :', playerNames);
+        // console.log('rendering view. starting game...with', numPlayers, 'players.');
+        parentModel.set('newPlayerNames', playerNames);
+        parentModel.set('numPlayers', 4);
+
+        _.each(viewsToRender, function(view){
+            view.render();
+        });
+        Backbone.Events.trigger('newGame', [true]);
+
+    } else{
+        //Vex control flow:
     vex.dialog.open({
       message: 'Let\'s play Ricochet Robots! \n How many players?',
       input: "<input name=\"players\" type=\"number\" max=\"5\" min=\"1\" placeholder=\"1\" required />",
@@ -46,4 +60,5 @@ var O = function(viewsToRender, parentModel){
         });
       }
     });
+    }
 };

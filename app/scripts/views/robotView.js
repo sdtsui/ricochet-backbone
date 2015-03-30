@@ -14,17 +14,29 @@ window.robotView = Backbone.View.extend({
   render: function(){
     return this.template(this.model.attributes);
   },
+  //animate an activated robot...
   activate: function(){
+    var props = this.model.attributes;
+    var robot = $('.'+props.color);
+    robot.removeClass('rotated');
+    robot.addClass('rotated');
+    setTimeout(function(){
+      this.removeClass('rotated');
+    }.bind(robot),500);
   },
   setup: function(dir){
     var props = this.model.attributes;
     var boxSize = props.boxSize;
 
     //Model holds reference to the last clicked robot, to know which one to move.
-    var robot = $('.'+props.color).on('mousedown', function(selection){
-      var activeRobot = props.color;
-      rootModel.get('boardModel').set('activeRobot', activeRobot);
-    });
+    var robot = $('.'+props.color)
+    robot.on('mousedown', function(selection){
+      var activeRobotColor = props.color;
+      rootModel.get('boardModel').set('activeRobot', activeRobotColor);
+      // rootModel.get('boardModel').get('robots').where({color: activeRobotColor}).activate();
+      this.activate();
+    }.bind(this));
+
 
     //Placeholder code to draw a symbol on the canvas for one robot. *break off into a fn*
     var context = robot[0].getContext('2d')

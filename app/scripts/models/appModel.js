@@ -19,7 +19,8 @@ window.appModel = Backbone.Model.extend({
             G: '#39CC36',
             B: '#0C11CA',
             Y: '#EFEB1D',
-            silverBorder: '#ABADA0',
+            silverBorder: '#72736D',
+            silverLight: '#ABADA0', 
             lightYellow: '#E8E549', //background
             lightGrey:  '#66665D', //center walls
             darkGrey: '#51514B' //center square

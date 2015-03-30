@@ -8,6 +8,7 @@
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script src="node_modules/underscore/underscore-min.js"></script>
     <script src="node_modules/backbone/backbone-min.js"></script>
+    <script src="node_modules/d3/d3.min.js"></script>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" type="text/css" href="node_modules/twitter-bootstrap/docs/assets/css/bootstrap.css">
@@ -54,7 +55,7 @@
         <div class='rightText' align=right>
             Bid:
             <strong class="pointDisplay"> <%= currentBid %></strong>
-            \\ Pts: <strong class="pointDisplay">
+            Pts: <strong class="pointDisplay">
             <%= tokensWon.length %>
             </strong>
         </div>
@@ -132,7 +133,8 @@
         // TESTING: OFF:
         // 
         // 
-        O([APPDIV, boardDetails], rootModel);
+        O([APPDIV, boardDetails], rootModel, true);
+        
     });
     </script>
 
