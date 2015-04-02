@@ -218,7 +218,12 @@ window.scoreModel = Backbone.Model.extend({
 		this.set('activeBid', activeBid);
 		this.set('activePlayer', activeBid.username);
 		vex.dialog.open({
-			message: 'Your move, ' + activeBid.username + '.  Your bid is '+ activeBid.value + ' moves.'
+			message: 'Your move, ' + activeBid.username + '.  Your bid is '+ activeBid.value + ' moves.',
+			buttons: [
+			  $.extend({}, vex.dialog.buttons.YES, {
+			    text: 'I\'m ready.'
+			  })
+			]
 		});
 		//render the board so that a player knows when they're active
 		//assign a listener...for winning. remove that listener when needed.
