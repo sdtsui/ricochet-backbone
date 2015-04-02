@@ -27,9 +27,16 @@ window.scoreModel = Backbone.Model.extend({
 					this.set('timerValue', 0);
 				}
 			}.bind(this), 1000);
-		}
+		},
+		bidCounter: 0
+	},
+	incrementBidCounter : function(){
+		console.log('adding bids :');
+		this.set('bidCounter', this.get('bidCounter')+1);
+		console.log('new bid #: ', this.get('bidCounter'));
 	},
 	initialize: function(){
+		Backbone.Events.on('newBidEvent', this.incrementBidCounter, this);
 		Backbone.Events.on('robotMoved', this.robotMoved, this)
 		Backbone.Events.on('robotArrived', this.robotArrived, this)
 
@@ -238,6 +245,9 @@ window.scoreModel = Backbone.Model.extend({
 			}
 		}.bind(this));
 		bids.sort(function(bid1, bid2){
+			if(bid1.value === bid2.value){
+				return bid1.order - bid2.order;
+			}
 			return bid1.value - bid2.value;
 		})
 		this.set('bidQueue', bids);
@@ -246,8 +256,9 @@ window.scoreModel = Backbone.Model.extend({
 		//creates a new bid object with the bid, and a reference to the player that made it
 		return {
 			username 	: player.get('username'),
-			value 		: player.get('currentBid'),
-			playerModel : player
+			value 		: player.get('currentBid').moves,
+			playerModel : player,
+			order		: player.get('currentBid').bidNumber
 		};
 	},
 	dequeueBid: function(){

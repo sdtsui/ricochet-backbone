@@ -54,7 +54,7 @@
         </div> 
         <div class='rightText' align=right>
             Bid:
-            <strong class="pointDisplay"> <%= currentBid %></strong>
+            <strong class="pointDisplay"> <%= currentBid.moves %></strong>
             Pts: <strong class="pointDisplay">
             <%= tokensWon.length %>
             </strong>
@@ -133,7 +133,7 @@
         // TESTING: OFF:
         // 
         // 
-        O([APPDIV, boardDetails], rootModel, true);
+        O([APPDIV, boardDetails], rootModel);
         
     });
     </script>

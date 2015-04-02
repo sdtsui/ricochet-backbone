@@ -2,12 +2,15 @@ window.playersView = Backbone.View.extend({
 	el: $('playersView'),
 	events: {
 		'click .btn' : function(e){
+            console.log('see event', this.model);
 			e.preventDefault();
 			var btn = $(e.currentTarget); 
 			var id = btn.data('id');
 			var bid = btn.siblings()[0].valueAsNumber;
 			var player = this.model.get(id);
-			player.set('newestBid', bid);
+            Backbone.Events.trigger('newBidEvent', [bid]);
+            player.trigger('newBidEvent', [bid]);
+			// player.set('newestBid', bid);
 			// console.log("Bid Set : ", player.get('username'));
 		},
 	},

@@ -35,7 +35,7 @@ var O = function(viewsToRender, parentModel, test){
         }
 
         vex.dialog.open({
-          message: "OMG 2nd diag.",
+          message: "What are your players' names?",
           input: inputHTML,
           buttons: [
             $.extend({}, vex.dialog.buttons.YES, {

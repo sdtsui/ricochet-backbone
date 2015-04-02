@@ -2,7 +2,7 @@ window.playerModel = Backbone.Model.extend({
 	defaults: {
 		//things that the playermodel needs
 		newestBid: undefined,
-		currentBid: 'none',
+		currentBid: undefined,
 		tokensWon: [], //will be an array of strings, symbolizing the tokens won
 		//OR, maybe I should just keep them inside the model, 
 		//holding reference to the players that won them...
@@ -17,8 +17,10 @@ window.playerModel = Backbone.Model.extend({
 
 	initialize: function(){
 		// console.log('new player created, with name : ', this.get('username'));
+		this.resetBids();
 		this.set('cid', this.cid);
-		this.on('change:newestBid', this.handleNewBid, this);
+		this.on('newBidEvent', this.handleNewBid, this);
+		// this.on('newBidEvent')
 	},
 	// wonToken: function(tokenSym){
 	// 	this.get('tokensWon').push(tokenSym);
@@ -26,19 +28,35 @@ window.playerModel = Backbone.Model.extend({
 	// getScore: function(){
 	// 	return this.get('tokensWon').length;
 	// },
-	handleNewBid : function(){
+	handleNewBid : function(bidData){
+		console.log('bidData :', bidData);
+		console.log(typeof bidData);
 		var oldBid = this.get('currentBid');
-		var newBid = this.get('newestBid');
-		if (oldBid === 'none'){
-			this.set('currentBid', this.get('newestBid'));
-		} else if (newBid < oldBid) {
-			this.set('currentBid', newBid);
+		var newBid = bidData[0];
+		debugger;
+		var bidNumber = rootModel.get('scoreModel').get('bidCounter');
+		if (oldBid.bidNumber === undefined){
+			this.set('currentBid', {
+				moves: newBid,
+				bidNumber: bidNumber
+			});
+			console.log('no previous bid, new bid of :', newBid, "with number :", bidNumber);
+		} else if (newBid < oldBid.moves) {
+			console.log('previous bid: ', this.get('currentBid'));
+			this.set('currentBid', {
+				moves: newBid,
+				bidNumber: bidNumber
+			});
+			console.log('newBid : ', this.get('currentBid'));
 		}
 		this.set('newestBid', undefined);;
 		Backbone.Events.trigger('newBid');
 	},
 	resetBids: function(){
-		this.set('currentBid', 'none');
+		this.set('currentBid', {
+			moves: 'none',
+			bidNumber: undefined
+		});
 	},
 	addPoint: function(newToken){
 		//testing function to push to tokensWon;
