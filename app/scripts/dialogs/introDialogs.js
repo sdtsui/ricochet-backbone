@@ -20,12 +20,14 @@ var O = function(viewsToRender, parentModel, test){
         $.extend({}, vex.dialog.buttons.YES, {
           text: 'That many players!'
         }), $.extend({}, vex.dialog.buttons.NO, {
-          text: 'I don\'t want to play...'
+          text: '¯\\\(°_o)/¯  - I don\'t know how to play.'
         })
       ],
       callback: function(data) {
         if (data === false) {
-          return console.log('Placeholder function...redirect to something silly.');
+          console.log('redirecting...');
+          window.location = 'https://drive.google.com/file/d/0B8RLNOM6IisOWFU3MWhfTUk5YVU/view?usp=sharing';
+          return;
         }
         var inputTemplate = ['<div> <input class=\"nameDisplay\"name=\"players\"', ' type=\"text\" placeholder=\"Player Name\" required/> </div>'];
         var numPlayers = data.players

@@ -33,7 +33,6 @@ window.playerModel = Backbone.Model.extend({
 		console.log(typeof bidData);
 		var oldBid = this.get('currentBid');
 		var newBid = bidData[0];
-		debugger;
 		var bidNumber = rootModel.get('scoreModel').get('bidCounter');
 		if (oldBid.bidNumber === undefined){
 			this.set('currentBid', {

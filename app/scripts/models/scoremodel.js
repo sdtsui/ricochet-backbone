@@ -239,7 +239,7 @@ window.scoreModel = Backbone.Model.extend({
 		var players = rootModel.get('players');
 		var bids = [];
 		players.each(function(player, idx){
-			if(player.get('currentBid') !== 'none'){
+			if(player.get('currentBid').moves !== 'none'){
 				var newBid = this.createNewBid(player);
 				bids.push(newBid);				
 			}
