@@ -14,7 +14,7 @@
   "author": "Sze-Hung Daniel Tsui",
   "license": "ISC",
   "engines": {
-    "node": "1.12.0"
+    "node": "*"
   },
   "homepage": "https://github.com/sdtsui/ricochet-backbone",
   "dependencies": {
