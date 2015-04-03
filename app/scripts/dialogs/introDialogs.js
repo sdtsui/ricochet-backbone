@@ -23,8 +23,11 @@ var startDialog = function(viewsToRender, parentModel, test){
         })
       ],
       callback: function(data) {
+        console.log(data);
         if (data === false) {
-          window.location = 'https://drive.google.com/file/d/0B8RLNOM6IisOWFU3MWhfTUk5YVU/view?usp=sharing';
+          var instructions = new instructionsView({
+            el: $('#instructions')
+          }).render();
           return;
         }
         var inputTemplate = ['<div> <input class=\"nameDisplay\"name=\"players\"', ' type=\"text\" placeholder=\"Player Name\" required/> </div>'];
