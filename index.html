@@ -57,7 +57,7 @@
             </div>
             <div class="card_header card_bid_header">
                 <div class="bidfield">
-                    <input type="number" height="25px" class="text-input" min="2" max="99"style="width:50px;" name="playerBid-1" placeholder=<%= currentBid.moves %>>
+                    <input type="number" height="25px" class="text-input" min="2" max="99"style="width:65px;" name="playerBid-1" placeholder=<%= currentBid.moves %>>
                 <button class="btn-primary bid-btn" data-id=<%= cid %> >
                     <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Bid
                 </button>
@@ -112,7 +112,7 @@
                     <div id="playersView" class="playerHolder"></div>
             </div>
             <div id="credits" class="footerText">
-                <div> Quick Start Instructions: <br>Bidders will be asked to move at the end of each round. <br>To activate a robot: click it!<br> To move an activated robot: use WASD or arrow keys.<br><br>               For 2-5 players. Have fun!</div>
+                <div> <u>Quick Start Instructions:</u> <br>Bidders will be asked to move at the end of each round. <br>To activate a robot: click it!<br> To move an activated robot: use WASD or arrow keys.<br><br>               For 2-5 players. Have fun!</div>
                 <br>
                 By: <a href="//sdtsui.com"><strong>Daniel Tsui</strong></a><br>
                 <a href="//github.com/sdtsui/ricochet-backbone"><strong>Repo</strong></a><br>
@@ -143,7 +143,7 @@
 
         // Last param of this function allows for fast rendering of 4 players
         startDialog([APPDIV, boardDetails], rootModel, false);
-        
+
     });
     </script>
 

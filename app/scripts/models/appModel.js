@@ -27,8 +27,9 @@ window.appModel = Backbone.Model.extend({
             background      : '#E7D4B0', //grey, orange tint
             xSquareBorder   : '#ABADA0', //tiny xSquare dots
             xSquareBg       : '#D4D7C7',//offwhite
-            xSquareG        : '#9B9D92',
-            xSquareY        : '#DDE94A'
+            xSquareOverlay  : '#ECEDE6', //light, offwhite
+            xSquareG        : '#DBDBDB',
+            xSquareY        : '#EBE0A6'
         },
         boxSize: undefined
     },

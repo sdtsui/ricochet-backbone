@@ -55,49 +55,52 @@ window.canvasDrawView = Backbone.View.extend({
       drawBoard();
   },
   drawBoardProps: function(context, boardWidth, boxSize, completeBoard){
-      context.beginPath();
-      var p = 2;
-      function drawBoardProps(viewCtx){
+    context.beginPath();
+    var p = 2;
+    function drawBoardProps(viewCtx){
+    for (var row = 0; row < 16; row++){
+      for(var col = 0; col < 16; col++){
+        var x = p+(col*boxSize);
+        var y = p+(row*boxSize);
+        var squareProps = completeBoard[row][col];
+        
+        // viewCtx.drawBackgroundX(context, boxSize, x, y);
+
+        //Draw shapes based on the propertyString.
+        viewCtx.drawWalls(context, boxSize, x, y, squareProps);
+        var colorIndex = viewCtx.indexOfColorOrShape(squareProps, "RGBY");
+        if (colorIndex !== -1){
+          var color = squareProps[colorIndex];
+          var shape = squareProps[viewCtx.indexOfColorOrShape(squareProps, "CTQH")];
+
+          //add the tokens to scoreModel, so a game can start.
+          var newToken = {
+            color : color,
+            shape : shape,
+            loc   : {
+              row   : row,
+              col   : col
+            } 
+          }
+          rootModel.get('scoreModel').addToken(newToken);
+          viewCtx.drawShape(context, boxSize, x, y, color, shape);
+        }
+      }
+    }
+    }
+    function drawBackBoardProps(viewCtx){
         for (var row = 0; row < 16; row++){
           for(var col = 0; col < 16; col++){
             var x = p+(col*boxSize);
             var y = p+(row*boxSize);
             var squareProps = completeBoard[row][col];
-
-            /**
-             * Placeholder, to draw background on squares.
-             */
-            
-            if (squareProps === "X"){
-              //draw nothing
-              continue;
-            }
-
-            //Draw shapes based on the propertyString.
-            viewCtx.drawWalls(context, boxSize, x, y, squareProps);
-            var colorIndex = viewCtx.indexOfColorOrShape(squareProps, "RGBY");
-            if (colorIndex !== -1){
-              var color = squareProps[colorIndex];
-              var shape = squareProps[viewCtx.indexOfColorOrShape(squareProps, "CTQH")];
-
-              //add the tokens to scoreModel, so a game can start.
-              var newToken = {
-                color : color,
-                shape : shape,
-                loc   : {
-                  row   : row,
-                  col   : col
-                } 
-              }
-              rootModel.get('scoreModel').addToken(newToken);
-              viewCtx.drawShape(context, boxSize, x, y, color, shape);
-            }
+            viewCtx.drawBackgroundX(context, boxSize, x, y);
           }
         }
-      }
-
-      var ctx = this
-      drawBoardProps(ctx);
+    }
+    var ctx = this
+    drawBackBoardProps(ctx);
+    drawBoardProps(ctx);
   },
   indexOfColorOrShape: function(propString, searchString){
     for(var i =0 ; i < searchString.length; i++){
@@ -109,6 +112,7 @@ window.canvasDrawView = Backbone.View.extend({
     return -1;
   },
   drawBackgroundX: function(context, boxSize, x, y){
+    var colorHex = this.model.get('colorHex');
     /**
      * 8 grey dots
      * grey border square
@@ -117,8 +121,95 @@ window.canvasDrawView = Backbone.View.extend({
      *
      * offwhite center sq...as huge border to block off missmatch from lines
      */
+    context.beginPath();
+    context.moveTo(x+boxSize*.2, y+boxSize*.2);
+    context.lineTo(x+boxSize*.2, y+boxSize*.8);
+    context.lineTo(x+boxSize*.8, y+boxSize*.8);
+    context.lineTo(x+boxSize*.8, y+boxSize*.2);
+    context.closePath();
+    context.lineWidth = .25;
+    context.strokeStyle = '#ABADA0';
+    context.stroke();
+    //moveTo
+    //draw a tiny arc at 4 points
+    context.lineWidth = .5;
+    context.strokeStyle = '#ABADA0';
     
+    context.beginPath();
+    context.arc(x+boxSize*.16, y+boxSize*.16, boxSize*.015, 0, 2*Math.PI,false)
+    context.stroke();
 
+    context.beginPath();
+    context.arc(x+boxSize*.16, y+boxSize*.84, boxSize*.015, 0, 2*Math.PI,false)
+    context.stroke();
+
+    context.beginPath();
+    context.arc(x+boxSize*.84, y+boxSize*.84, boxSize*.015, 0, 2*Math.PI,false)
+    context.stroke();
+
+    context.beginPath();
+    context.arc(x+boxSize*.84, y+boxSize*.16, boxSize*.015, 0, 2*Math.PI,false)
+    context.stroke();
+
+    context.beginPath();
+    context.arc(x+boxSize*.16, y+boxSize*.50, boxSize*.015, 0, 2*Math.PI,false)
+    context.stroke();
+
+    context.beginPath();
+    context.arc(x+boxSize*.50, y+boxSize*.16, boxSize*.015, 0, 2*Math.PI,false)
+    context.stroke();
+
+    context.beginPath();
+    context.arc(x+boxSize*.50, y+boxSize*.84, boxSize*.015, 0, 2*Math.PI,false)
+    context.stroke();
+
+    context.beginPath();
+    context.arc(x+boxSize*.84, y+boxSize*.50, boxSize*.015, 0, 2*Math.PI,false)
+    context.stroke();
+    
+    //dark grey border
+    //
+    //4 thick  diagonal dark grey strokes
+    //
+    
+    //thick yellow-orange stroke:
+    context.beginPath();
+    context.strokeStyle = colorHex['xSquareY'];
+    context.lineWidth = boxSize*.23;
+    context.moveTo(x+boxSize*.33, y+boxSize*.33);
+    context.lineTo(x+boxSize*.75, y+boxSize*.75);
+    context.stroke();
+
+    //thick diag dark grey strokes
+    context.beginPath();
+    context.strokeStyle = colorHex['xSquareG'];
+    context.lineWidth = boxSize*.09;
+    context.moveTo(x+boxSize*.33, y+boxSize*.33);
+    context.lineTo(x+boxSize*.75, y+boxSize*.75);
+    context.stroke();
+
+    context.beginPath();
+    context.strokeStyle = colorHex['xSquareG'];
+    context.lineWidth = boxSize*.08;
+
+    context.moveTo(x+boxSize*.25, y+boxSize*.47);
+    context.lineTo(x+boxSize*.50, y+boxSize*.73);
+    context.stroke();
+
+    context.moveTo(x+boxSize*(1-.25), y+boxSize*(1-.47));
+    context.lineTo(x+boxSize*(1-.50), y+boxSize*(1-.73));
+    context.stroke();
+
+
+    context.beginPath();
+    context.strokeStyle = colorHex['xSquareOverlay']
+    context.lineWidth = boxSize*.13;
+    context.moveTo(x+boxSize*.28, y+boxSize*.28);
+    context.lineTo(x+boxSize*.28, y+boxSize*.72);
+    context.lineTo(x+boxSize*.72, y+boxSize*.72);
+    context.lineTo(x+boxSize*.72, y+boxSize*.28);
+    context.closePath();
+    context.stroke();
   },
   drawWalls: function(context, boxSize, x, y, propString){
     // if(propString === "E"){
