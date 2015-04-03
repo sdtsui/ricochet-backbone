@@ -1,19 +1,31 @@
 window.playersView = Backbone.View.extend({
 	el: $('playersView'),
 	events: {
-		'click .btn' : function(e){
-            console.log('see event', this.model);
-			e.preventDefault();
-			var btn = $(e.currentTarget); 
-			var id = btn.data('id');
-			var bid = btn.siblings()[0].valueAsNumber;
-			var player = this.model.get(id);
-            Backbone.Events.trigger('newBidEvent', [bid]);
-            player.trigger('newBidEvent', [bid]);
-			// player.set('newestBid', bid);
-			// console.log("Bid Set : ", player.get('username'));
-		},
+		'click .bid-btn' : 'clickBidBtn',
+        'keypress :input': 'keyDown'
 	},
+    clickBidBtn: function(e){
+        e.preventDefault();
+        var btn = $(e.currentTarget); 
+        var id = btn.data('id');
+        var bid = btn.siblings()[0].valueAsNumber;
+        this.triggerBid(bid, id);
+    },
+    keyDown: function(e){//AWESOME
+        if (e.keyCode === 13){
+            var input = $(e.currentTarget);
+            var id = input.siblings().data('id');
+            var bid = input[0].valueAsNumber;
+            this.triggerBid(bid, id);
+        }
+    },
+    triggerBid : function(bid, id){
+        if ((bid-bid === 0) && (bid <= 99) ){
+            Backbone.Events.trigger('newBidEvent', [bid]);
+            var player = this.model.get(id);
+            player.trigger('newBidEvent', [bid]);                
+        }
+    },
 	playersViews : [],
 	templStr : ['<div id="player-' , '<%= username >' , '" class="playerBox1"></div>'],
 	scoreV: ['<div id="scoreView" class="scoreHolder"> </div>'],
@@ -29,7 +41,6 @@ window.playersView = Backbone.View.extend({
     	//	
     	//	
     	_.each(this.model.models, function(playerModel, idx){
-    		// console.log(idx, playerModel);
     		var newView = new playerView({
     			model: playerModel,
     			el: $('#player-'+playerModel.get('username'))
@@ -51,7 +62,6 @@ window.playersView = Backbone.View.extend({
     	_.each(this.model.models, function(playerModel, idx){
     		// var newView = new playerView({model: })
     		// this.playersViews.push(new playerView())
-    		// console.log('append here!');
     		var userName = playerModel.get('username');
     		var htmlString = this.templStr[0] + userName + this.templStr[2];
     		this.$el.append(htmlString);
@@ -62,14 +72,4 @@ window.playersView = Backbone.View.extend({
     	//create the next models, append them to the el
     	//return this.$el
     }
-    // captureBid: function(e){
-    // 	console.log('e :',e);
-    // 	console.log(e.target.offsetParent.localName)
-    // 	if (e.target === 'button.btn.bid-btn'){
-    // 		console.log('button!' + this.model.get('username'))
-    // 	}else {
-    // 		console.log('not button')
-    // 	}
-    // 	console.log('submit seen')
-    // }
 })

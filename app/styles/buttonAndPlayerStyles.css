@@ -1,3 +1,22 @@
+.body{
+    background-color: #D4D7C7 !important;
+}
+
+.content_container{
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.card_header{
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    padding: 1px 1px;
+    border-bottom: 1px solid transparent;
+}
+.card_bid_header{
+    margin-left: 20%; 
+}
+
 .rotated {
     transition        : 2.5s linear;
     -webkit-transform : rotate(2880deg);
@@ -8,23 +27,28 @@
 }
 
 .playerBox1{
+    background-color: #ABADA0;
     position: relative;
     border-top: 1px solid #ccd6dd;
     border-bottom: 1px solid #ccd6dd;
     border-left: 1px solid #e1e8ed;
     border-right: 1px solid #e1e8ed;
-    width: 350;
-    height: 115;
+    width: 205;
+    height: 140;
+    border-width: 5px;
 }
 
-.playerBox2{
+.scoreBox1{
+    background-color: #ABADA0;
     position: relative;
     border-top: 1px solid #ccd6dd;
     border-bottom: 1px solid #ccd6dd;
     border-left: 1px solid #e1e8ed;
     border-right: 1px solid #e1e8ed;
-    width: 255;
-    height: 105;
+    width: 205;
+    height: 155;
+    border-width: 5px;
+
 }
 
 /*.leftText{
@@ -46,10 +70,13 @@
 
 }
 .bid-btn{
-	position: relative;
-    float: left;
-    width: 125px;
-    height: 50px;
+    width: 55px;
+    height: 35px;
+}
+
+.game-btn{
+    width: 70px;
+    height: 72px;
 }
 
 input{
@@ -84,11 +111,16 @@ input{
 	width: 125;
 }
 .pointDisplay{
-    font-size: 50;
+    font-size: 38;
     text-align: center;
 }
 
 .nameDisplay{
-    font-size: 18;
+    font-size: 22;
     text-align: center;
+}
+
+.footerText{
+    font-size: 16;
+    font-family: Garamond;
 }

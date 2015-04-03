@@ -12,6 +12,8 @@
 
     <!-- Bootstrap -->
     <link rel="stylesheet" type="text/css" href="node_modules/twitter-bootstrap/docs/assets/css/bootstrap.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
     <script src="node_modules/twitter-bootstrap/docs/assets/js/bootstrap.min.js">
     </script>
 
@@ -39,65 +41,62 @@
     <script src="app/scripts/collections/robots.js"></script>
     <script src="app/scripts/collections/players.js"></script>
 
-    <!-- model issue -->
     <!-- Backbone View Templates -->
     <script id="boardViewTemplate"type='text/template' >
-    <canvas id="boardCanvas" width="<%= boardWidth %>" height="<%= boardWidth %>" style="background: #fff;"></canvas>
+        <canvas id="boardCanvas" width="<%= boardWidth %>" height="<%= boardWidth %>" style="background: #fff;"></canvas>
     </script>
-
 
     <script id='playerViewTemplate' type="text/template">
-    <h4>
-        <div class='leftText'>
-            <strong> 
-                <%= username %>
-             </strong>
-        </div> 
-        <div class='rightText' align=right>
-            Bid:
-            <strong class="pointDisplay"> <%= currentBid.moves %></strong>
-            Pts: <strong class="pointDisplay">
-            <%= tokensWon.length %>
-            </strong>
-        </div>
-    </h4>
-        <div class="bidfield">
-            <input type="number" height="25px" class="text-input" name="playerBid-1" placeholder=<%= currentBid.moves %>>
-            <button class="btn bid-btn" data-id=<%= cid %> >
-                Place Bid
-            </button>
-        </div>
-    </script>
-
-    <script id='scoreViewTemplate'type="text/template">
-        <div class='playerBox1'>
-            <div class="round-timer">
-                <%= timerValue %>
+        <div class="content_container">
+            <div class="card_header nameDisplay"> 
+                <span class="glyphicon glyphicon-align-center"></span>
+                <strong> <%= username %></strong> </div>
+            <div> 
+            Pts: <strong class="pointDisplay"><%= tokensWon.length %></strong>
+            Current Bid: <strong class="pointDisplay"> <%= currentBid.moves %></strong>
             </div>
-            <button type="submit" class="btn btn-positive bid-btn" 
-            onClick='Backbone.Events.trigger("nextRound");'>
-                New Game
-            </button>
-            <button type="submit" class="btn btn-positive bid-btn"
-            onClick='Backbone.Events.trigger("skipTimer");'>
-                Skip Timer
-            </button>
-            <div> Moves: <%= activeMoves %></div>
-            <div> Tokens Left: <%= tokensRemaining.length %></div>
+            <div class="card_header card_bid_header">
+                <div class="bidfield">
+                    <input type="number" height="25px" class="text-input" min="2" max="99"style="width:50px;" name="playerBid-1" placeholder=<%= currentBid.moves %>>
+                <button class="btn-primary bid-btn" data-id=<%= cid %> >
+                    <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Bid
+                </button>
+                </div>
+            </div>
+        </div>
+    </script>
+    <script id='scoreViewTemplate'type="text/template">
+        <div class='scoreBox1'>
+            <div style="float: left;">
+                <div class="round-timer">
+                    <%= timerValue %>
+                </div>
+                <div> Moves: <%= activeMoves %></div>
+                <div> Tokens Left: <%= tokensRemaining.length %></div>
+            </div>
+            <div style="float: left;">
+                <div>
+                <button type="submit" class="btn-danger game-btn" 
+                onClick='window.location = "ricochet.herokuapp.com"'>
+                    New Game
+                </button>
+                </div>
+                <div>
+                <button type="submit" class="btn-warning game-btn"
+                onClick='Backbone.Events.trigger("skipTimer");'>
+                    <span class="glyphicon glyphicon-fast-forward"></span>
+                </button>        
+                </div>
+
+            </div>
 
         </div>
     </script>
-    <script id='dialogTemplate'type="text/template">
-
-    </script>
-
-
 
     <!-- Backbone Views -->
     <script src="app/scripts/views/appView.js"></script>
     <script src="app/scripts/views/robotView.js"></script>
     <script src="app/scripts/views/boardView.js"></script>
-    <script src="app/scripts/views/boardControlsView.js"></script>
     <script src="app/scripts/views/canvasDrawView.js"></script>
     <script src="app/scripts/views/scoreView.js"></script>
     <script src="app/scripts/views/playerView.js"></script>
@@ -107,16 +106,22 @@
 <div class="content_container">
             <div style="float: left;">
               <div id="appView"> </div>
-              <div id="credits">
-                <a href="//sdtsui.com"><strong>Daniel Tsui</strong></a><br>
+            
+            </div>
+            <div style="float: left;">
+                    <div id="playersView" class="playerHolder"></div>
+            </div>
+            <div id="credits" class="footerText">
+                <div> Quick Start Instructions: <br>Bidders will be asked to move at the end of each round. <br>To activate a robot: click it!<br> To move an activated robot: use WASD or arrow keys.<br><br>               For 2-5 players. Have fun!</div>
+                <br>
+                By: <a href="//sdtsui.com"><strong>Daniel Tsui</strong></a><br>
+                <a href="//github.com/sdtsui/ricochet-backbone"><strong>Repo</strong></a><br>
+                Please email bug reports and feedback to daniel.tsui at hackreactor dot com<br>
+                <br>
+                <br>
                 <strong>Original Author     :    Alex Randolph</strong><br>
                 <strong>Original Graphics   :  Franz Vohwinkel</strong>
 
-            </div>
-            </div>
-            <div style="float: left;">
-                    <!-- <div id="scoreView" id='playersView' class="scoreHolder"></div> -->
-                    <div id="playersView" class="playerHolder"></div>
             </div>
 </div>
     
@@ -135,12 +140,9 @@
         window.boardDetails = new canvasDrawView({
             model: rootModel
         });
-        //Add modal here. 
-        // Get number of players.
-        // TESTING: OFF:
-        // 
-        // 
-        O([APPDIV, boardDetails], rootModel);
+
+        // Last param of this function allows for fast rendering of 4 players
+        startDialog([APPDIV, boardDetails], rootModel, false);
         
     });
     </script>
@@ -153,19 +155,18 @@ $(document).on('ready', function(){
         //only act if there is an active player to win the point...
         if (rootModel.get('scoreModel').get('activePlayer') !== undefined){
             var keyCode = e.keyCode;
-            if (e.keyCode === 38){
+            if ((e.keyCode === 38) ||(e.keyCode === 87)){
                 Backbone.Events.trigger('keyN');
-            } else if (e.keyCode === 40) {
+            } else if ((e.keyCode === 40) ||(e.keyCode === 83)) {
                 Backbone.Events.trigger('keyS');
-            } else if (e.keyCode === 39) {
+            } else if ((e.keyCode === 39) ||(e.keyCode === 68)) {
                 Backbone.Events.trigger('keyE');
-            } else if (e.keyCode === 37) {
+            } else if ((e.keyCode === 37) ||(e.keyCode === 65)) {
                 Backbone.Events.trigger('keyW');
             } 
         }
     });
 })
-
 </script>
   </body>
 </html>

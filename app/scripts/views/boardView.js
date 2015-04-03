@@ -11,7 +11,6 @@ window.boardView = Backbone.View.extend({
     return this.$el;
   },
   newActiveRobot: function(){
-  	console.log('new Active Robot! :', this.model.get('activeRobot'));
-  	console.log('*this is a placeholder function for re-renderig a robot: Animation*');
+    //placeholder function for re-rendering a robot
   }
 });

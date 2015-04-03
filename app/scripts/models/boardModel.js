@@ -41,15 +41,12 @@ window.boardModel = Backbone.Model.extend({
         this.on('all', function(n){
             //right now, do nothing. 
             //maybe some responsive blinking??
-            //
-            // console.log('Local Change : ', n);
         })
         this.set('quadrantArrangement', this.setQuads());
         this.constructBoard(this.get('quadrantArrangement'));
         this.setRobots();
         //N,S,E,W:
         Backbone.Events.on('all', function(n){
-            // console.log('Global Event : ', n);
             if (n.slice(0,3) === 'key'){
                 this.respondToKey(n);
             }
@@ -90,7 +87,7 @@ window.boardModel = Backbone.Model.extend({
             next.nextSquare = this.checkMoveDirValid(next.nextSquare, dir, robotToMove, completeBoard);
         }
         if (next.moves === 0){
-            console.log('illegal : nothing happens; should disregard keydown');
+            //'illegal : nothing happens; should disregard keydown';
         } else {
 
             robotToMove.savePosition();
@@ -215,7 +212,7 @@ window.boardModel = Backbone.Model.extend({
                 }
             }
             if (match){
-                console.log('conflict at  ' + row +"|"+col+ ' trying again');
+                //conflict, try to find a new square
                 continue;
             } else {
                 occupiedSquares.push(newCoords.slice());

@@ -1,8 +1,7 @@
-var O = function(viewsToRender, parentModel, test){
+//god I wish I used promises
+var startDialog = function(viewsToRender, parentModel, test){
     if(test){
-        var playerNames = ["P1", "P2", "P3", "P4"];
-        // console.log('Player Names :', playerNames);
-        // console.log('rendering view. starting game...with', numPlayers, 'players.');
+        var playerNames = ["Zephanaiah", "Raghuvir", "Alpheus", "Sze-Hung"];
         parentModel.set('newPlayerNames', playerNames);
         parentModel.set('numPlayers', 4);
 
@@ -20,12 +19,11 @@ var O = function(viewsToRender, parentModel, test){
         $.extend({}, vex.dialog.buttons.YES, {
           text: 'That many players!'
         }), $.extend({}, vex.dialog.buttons.NO, {
-          text: '¯\\\(°_o)/¯  - I don\'t know how to play.'
+          text: '¯\\\(°_o)/¯  - How do I play?'
         })
       ],
       callback: function(data) {
         if (data === false) {
-          console.log('redirecting...');
           window.location = 'https://drive.google.com/file/d/0B8RLNOM6IisOWFU3MWhfTUk5YVU/view?usp=sharing';
           return;
         }
@@ -44,13 +42,15 @@ var O = function(viewsToRender, parentModel, test){
               text: 'GO!!!'
             })
           ],
+          /**
+           * Input, an object data, for which data.players holds an array of strings.
+           * @return {[type]} [description]
+           */
           callback: function(data) {
             var playerNames = [];
             for (var i = 0 ; i < data.players.length; i++){
               playerNames.push(data.players[i]);
             }
-            // console.log('Player Names :', playerNames);
-            // console.log('rendering view. starting game...with', numPlayers, 'players.');
             parentModel.set('newPlayerNames', playerNames);
             parentModel.set('numPlayers', numPlayers);
 
@@ -58,6 +58,10 @@ var O = function(viewsToRender, parentModel, test){
                 view.render();
             });
             Backbone.Events.trigger('newGame');
+
+            //Drawing functions that eventually need to be separated up, as they override bootstrap.
+            $('body').css('background-color', '#D4D7C7');
+            $('#credits').remove();
           }
         });
       }

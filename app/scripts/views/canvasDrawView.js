@@ -13,7 +13,6 @@ window.canvasDrawView = Backbone.View.extend({
     context.fillStyle = colorHash['background'];
     context.rect(0,0, width, height);
     context.fill();
-    // console.log('completeBoard :', completeBoard);
     this.model.set('boxSize', boardProps.bsize);
     /**
      * Render the canvas first, which is a 16x16 grid of grey lines.
@@ -33,7 +32,6 @@ window.canvasDrawView = Backbone.View.extend({
       var bw = this.model.get('boardModel').get('boardWidth');
       var bh = bw;
       var boxSize = (bw-5)/16;
-      // console.log('boxSize : ', boxSize);
       return {
         bsize: boxSize,
         bw: bw

@@ -52,7 +52,7 @@ window.robotView = Backbone.View.extend({
             context.lineTo(xPos, yPos);
         }
     }
-    context.lineWidth = 1;
+    context.lineWidth = 2;
     context.strokeStyle = 'black';
     context.fillStyle = colors[props.color];
     context.closePath();
@@ -70,7 +70,7 @@ window.robotView = Backbone.View.extend({
             context.lineTo(xPos, yPos);
         }
     }
-    context.lineWidth = 1;
+    context.lineWidth = 2;
     context.strokeStyle = 'black';
     context.fillStyle = colors[props.color];
     context.closePath();
@@ -117,7 +117,6 @@ window.robotView = Backbone.View.extend({
     var props = this.model.attributes;
     var boxSize = props.boxSize;
     var robot = $('.'+props.color)
-    console.log(boxSize);
     robot.animate({
         top: (props.loc.row*boxSize+(boxSize*.1)+2),
         left: (props.loc.col*boxSize+(boxSize*.1)+2),

@@ -31,9 +31,7 @@ window.scoreModel = Backbone.Model.extend({
 		bidCounter: 0
 	},
 	incrementBidCounter : function(){
-		console.log('adding bids :');
 		this.set('bidCounter', this.get('bidCounter')+1);
-		console.log('new bid #: ', this.get('bidCounter'));
 	},
 	initialize: function(){
 		Backbone.Events.on('newBidEvent', this.incrementBidCounter, this);
@@ -63,7 +61,6 @@ window.scoreModel = Backbone.Model.extend({
 	robotMoved: function(){
 		//increment active moves.
 		//if active moves over latest bid, trigger fail event
-		console.log('nawp.');
 		this.set('activeMoves', this.get('activeMoves')+1);
 		if (this.get('activeMoves') >= this.get('activeBid').value ){
 			this.trigger('failRound', [this.get('activeBid')]);
@@ -172,7 +169,6 @@ window.scoreModel = Backbone.Model.extend({
 		var tokens = this.get('tokensRemaining')
 		tokens.push(newToken);
 		if(this.get('tokensRemaining').length === 16){
-			console.log(this.get('tokensRemaining').length);
 			this.shuffleTokens();
 		}
 	},
@@ -244,7 +240,7 @@ window.scoreModel = Backbone.Model.extend({
 		var players = rootModel.get('players');
 		var bids = [];
 		players.each(function(player, idx){
-			if(player.get('currentBid').moves !== 'none'){
+			if(player.get('currentBid').moves !== '-'){
 				var newBid = this.createNewBid(player);
 				bids.push(newBid);				
 			}

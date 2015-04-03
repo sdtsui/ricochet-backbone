@@ -23,7 +23,6 @@ window.robotModel = Backbone.Model.extend({
 	initialize: function(){
 		Backbone.Events.on('boardAssetsRendered', this.triggerMove, this);
 		this.on('change:loc', function(){
-			// console.log('robot location changing');
 			Backbone.Events.trigger('robotLocChange');
 		});
 	},

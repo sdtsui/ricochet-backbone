@@ -61,7 +61,6 @@ window.appModel = Backbone.Model.extend({
             if (numPlayers > 0){
                 var newPlayerNames = this.get('newPlayerNames');
                 for (var i = 0 ; i < numPlayers; i++){
-                    // console.log('creating a new player:');
                     newPlayers.push(new playerModel({
                         username: newPlayerNames[i]
                     }));

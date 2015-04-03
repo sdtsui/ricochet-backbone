@@ -16,7 +16,6 @@ window.playerModel = Backbone.Model.extend({
 	// },
 
 	initialize: function(){
-		// console.log('new player created, with name : ', this.get('username'));
 		this.resetBids();
 		this.set('cid', this.cid);
 		this.on('newBidEvent', this.handleNewBid, this);
@@ -29,8 +28,6 @@ window.playerModel = Backbone.Model.extend({
 	// 	return this.get('tokensWon').length;
 	// },
 	handleNewBid : function(bidData){
-		console.log('bidData :', bidData);
-		console.log(typeof bidData);
 		var oldBid = this.get('currentBid');
 		var newBid = bidData[0];
 		var bidNumber = rootModel.get('scoreModel').get('bidCounter');
@@ -39,21 +36,18 @@ window.playerModel = Backbone.Model.extend({
 				moves: newBid,
 				bidNumber: bidNumber
 			});
-			console.log('no previous bid, new bid of :', newBid, "with number :", bidNumber);
 		} else if (newBid < oldBid.moves) {
-			console.log('previous bid: ', this.get('currentBid'));
 			this.set('currentBid', {
 				moves: newBid,
 				bidNumber: bidNumber
 			});
-			console.log('newBid : ', this.get('currentBid'));
 		}
 		this.set('newestBid', undefined);;
 		Backbone.Events.trigger('newBid');
 	},
 	resetBids: function(){
 		this.set('currentBid', {
-			moves: 'none',
+			moves: '-',
 			bidNumber: undefined
 		});
 	},
@@ -72,14 +66,4 @@ window.playerModel = Backbone.Model.extend({
 		return lostToken;
 			
 	}
-    // captureBid: function(e){
-    // 	console.log('e :',e);
-    // 	console.log(e.target.offsetParent.localName);
-    // 	if (e.target === 'button.btn.bid-btn'){
-    // 		console.log('button!' + this.model.get('username'))
-    // 	}else {
-    // 		console.log('not button')
-    // 	}
-    // 	console.log('submit seen')
-    // }
 });
