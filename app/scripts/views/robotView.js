@@ -33,14 +33,13 @@ window.robotView = Backbone.View.extend({
     robot.on('mousedown', function(selection){
       var activeRobotColor = props.color;
       rootModel.get('boardModel').set('activeRobot', activeRobotColor);
-      // rootModel.get('boardModel').get('robots').where({color: activeRobotColor}).activate();
       this.activate();
     }.bind(this));
 
     var colors = rootModel.get('colorHex');
-    //Placeholder code to draw a symbol on the canvas for one robot. *break off into a fn*
     var context = robot[0].getContext('2d');
 
+    //Draw Ellipse one, outside the circular robot.
     context.beginPath();
     for (var i = 0 * Math.PI; i < 2 * Math.PI; i += 0.01 ) {
         xPos = 20 - (10 * Math.sin(i)) * Math.sin(0.5 * Math.PI) + (20 * Math.cos(i)) * Math.cos(0.5 * Math.PI);
@@ -59,6 +58,7 @@ window.robotView = Backbone.View.extend({
     context.stroke();
     context.fill();
 
+    //Draw Ellipse two.
     context.beginPath();
     for (var i = 0 * Math.PI; i < 2 * Math.PI; i += 0.01 ) {
         xPos = 20 - (10 * Math.sin(i)) * Math.sin(1 * Math.PI) + (20 * Math.cos(i)) * Math.cos(1 * Math.PI);
@@ -78,6 +78,7 @@ window.robotView = Backbone.View.extend({
     context.fill();
 
 
+    //Draw main large circle that represents robot.
     context.beginPath();
     context.fillStyle = colors[props.color];
     context.arc(20,20,16,0,Math.PI*2);
@@ -86,7 +87,7 @@ window.robotView = Backbone.View.extend({
     context.strokeStyle = 'black';
     context.stroke();
 
-
+    //Draw small arcs inside main circle.
     context.beginPath();
     context.arc(20,20,10,Math.PI*-.25,Math.PI*.25);
     context.lineWidth = 2;

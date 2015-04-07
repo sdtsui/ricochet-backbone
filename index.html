@@ -1,7 +1,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>RicochetBackbone</title>
+    <title>Ricochet Backbone</title>
     <meta name="description" content="Ricochet Robots in Backbone">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Dependencies -->
@@ -14,8 +14,7 @@
     <link rel="stylesheet" type="text/css" href="node_modules/twitter-bootstrap/docs/assets/css/bootstrap.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 
-    <script src="node_modules/twitter-bootstrap/docs/assets/js/bootstrap.min.js">
-    </script>
+    <script src="node_modules/twitter-bootstrap/docs/assets/js/bootstrap.min.js"></script>
 
     <!-- Robot CSS -->
     <link rel="stylesheet" type="text/css" href="app/styles/robotStyles.css">
@@ -27,6 +26,7 @@
     <link rel="stylesheet" href="node_modules/vex-js/css/vex.css"/>
     <link rel="stylesheet" href="node_modules/vex-js/css/vex-theme-wireframe.css"/>
   </head>
+
   <body>
     <!-- Backbone Models -->
     <script src="app/scripts/models/scoreModel.js"></script>
@@ -109,72 +109,32 @@
     <script src="app/scripts/views/playerView.js"></script>
     <script src="app/scripts/views/playersView.js"></script>
     <script src="app/scripts/views/instructionsView.js"></script>
-
     <script type="text/javascript" src="app/scripts/dialogs/introDialogs.js"></script>
-<div class="content_container">
-            <div style="float: left;">
-              <div id="appView"> </div>
-            
-            </div>
-            <div style="float: left;">
-                    <div id="playersView" class="playerHolder"></div>
-            </div>
-            <div id="credits" class="footerText" style="float: left;">
-                <div> <u>Quick Start Instructions:</u> <br>Bidders will be asked to move at the end of each round. <br>To activate a robot: click it!<br> To move an activated robot: use WASD or arrow keys.<br><br>               For 2-5 players. Have fun!</div>
-                <br>
-                By: Daniel Tsui. Find me at <a href="//sdtsui.com"><strong>sdtsui.com</strong></a>.<br>
-                Repo@<a href="//github.com/sdtsui/ricochet-backbone"><strong> github.com/sdtsui/ricochet-backbone</strong></a><br>
-                Please email bug reports and feedback to daniel.tsui at hackreactor dot com<br>
-                <br>
-                <br>
-                <strong>Original Author     :    Alex Randolph</strong><br>
-                <strong>Original Graphics   :  Franz Vohwinkel</strong>
-            </div>
-            <div id="instructions" style="float: left;"></div>
-</div>
-    
 
-    <script type="text/javascript">
-    $(document).on('ready', function(){
-        //Instantiate the main appModel instance.
-        window.rootModel = new appModel()
-        var APPDIV = new appView({
-            model: rootModel,
-            el: $('#appView')
-        });
+    <!-- Frontpage instructions -->
+    <div class="content_container">
+                <div style="float: left;">
+                  <div id="appView"> </div>
+                
+                </div>
+                <div style="float: left;">
+                        <div id="playersView" class="playerHolder"></div>
+                </div>
+                <div id="credits" class="footerText" style="float: left;">
+                    <div> <u>Quick Start Instructions:</u> <br>Bidders will be asked to move at the end of each round. <br>To activate a robot: click it!<br> To move an activated robot: use WASD or arrow keys.<br><br>               For 2-5 players. Have fun!</div>
+                    <br>
+                    By: Daniel Tsui. Find me at <a href="//sdtsui.com"><strong>sdtsui.com</strong></a>.<br>
+                    Repo@<a href="//github.com/sdtsui/ricochet-backbone"><strong> github.com/sdtsui/ricochet-backbone</strong></a><br>
+                    Please email bug reports and feedback to daniel.tsui at hackreactor dot com<br>
+                    <br>
+                    <br>
+                    <strong>Original Author     :    Alex Randolph</strong><br>
+                    <strong>Original Graphics   :  Franz Vohwinkel</strong>
+                </div>
+                <div id="instructions" style="float: left;"></div>
+    </div>
 
-        //**This can be abstracted back into the backbone model...**
-        //Draw on canvas.
-        window.boardDetails = new canvasDrawView({
-            model: rootModel
-        });
-
-        // Last param of this function allows for fast rendering of 4 players
-        startDialog([APPDIV, boardDetails], rootModel, false);
-
-    });
-    </script>
-
-<script type="text/javascript">
-//condense this into a clickhandler function to put into boardView eventually,
-//makes more sense there than in a random script
-$(document).on('ready', function(){
-    $(document.body).on('keydown', function(e){
-        //only act if there is an active player to win the point...
-        if (rootModel.get('scoreModel').get('activePlayer') !== undefined){
-            var keyCode = e.keyCode;
-            if ((e.keyCode === 38) ||(e.keyCode === 87)){
-                Backbone.Events.trigger('keyN');
-            } else if ((e.keyCode === 40) ||(e.keyCode === 83)) {
-                Backbone.Events.trigger('keyS');
-            } else if ((e.keyCode === 39) ||(e.keyCode === 68)) {
-                Backbone.Events.trigger('keyE');
-            } else if ((e.keyCode === 37) ||(e.keyCode === 65)) {
-                Backbone.Events.trigger('keyW');
-            } 
-        }
-    });
-})
-</script>
+    <!-- Init -->
+    <script type="text/javascript" src="app/init.js"></script>
   </body>
 </html>

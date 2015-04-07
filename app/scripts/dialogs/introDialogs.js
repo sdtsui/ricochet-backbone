@@ -1,11 +1,9 @@
-//god I wish I used promises
 var startDialog = function(viewsToRender, parentModel, test){
     //Test set of players, saving development time when drawing complex shapes on canvas
     if(test){
         var playerNames = ["Zephanaiah", "Raghuvir", "Alpheus", "Sze-Hung"];
         parentModel.set('newPlayerNames', playerNames);
         parentModel.set('numPlayers', 4);
-
         _.each(viewsToRender, function(view){
             view.render();
         });
@@ -23,7 +21,6 @@ var startDialog = function(viewsToRender, parentModel, test){
         })
       ],
       callback: function(data) {
-        console.log(data);
         if (data === false) {
           //Or, allows the player to view instructions...
           var instructions = new instructionsView({
@@ -62,7 +59,8 @@ var startDialog = function(viewsToRender, parentModel, test){
                 view.render();
             });
             Backbone.Events.trigger('newGame');
-            //Drawing functions that eventually need to be separated up, as they override bootstrap.
+
+            //Css that modifis bootstrap...could be refactored out.
             $('body').css('background-color', '#D4D7C7');
             $('#credits').remove();
           }
