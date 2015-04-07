@@ -18,7 +18,6 @@ window.scoreModel = Backbone.Model.extend({
 					,1000)
 				);			
 			}
-
 			var checkInterval = setInterval(function(){
 				if (this.get('timerValue') <= 0){
 					clearInterval(this.get('interval'));
@@ -33,22 +32,32 @@ window.scoreModel = Backbone.Model.extend({
 	incrementBidCounter : function(){
 		this.set('bidCounter', this.get('bidCounter')+1);
 	},
+	//Handles multiple sources of game logic. 
+	//Generally, 4 main functions:
+	//1) When robots are moved, scoreModel checks if a point is won, or the round is over.
+	//2) When bids are placed, starts the timer when appropriate.
+	//3) When timer reaches 0, gathers bids to create a queue, requesting moves from players.
+	//4) Assigns points and resets board state when a round ends.
 	initialize: function(){
-		Backbone.Events.on('newBidEvent', this.incrementBidCounter, this);
+		//Functions 1 
 		Backbone.Events.on('robotMoved', this.robotMoved, this)
 		Backbone.Events.on('robotArrived', this.robotArrived, this)
 
+		//Functions 2/3 3
+		Backbone.Events.on('newBidEvent', this.incrementBidCounter, this);
 		this.on('change:timerValue', this.checkTimer, this);
 		Backbone.Events.on('skipTimer', this.skipTimer, this);
-
-		this.on('endRound', this.newRound, this);
-		Backbone.Events.on('newGame', this.newRound, this);
-
 		this.on('timeUp', this.timeUp, this);
 		Backbone.Events.on('newBid', this.handleIncomingBid, this);
 
+		//Function 4
+		this.on('endRound', this.newRound, this);
+		Backbone.Events.on('newGame', this.newRound, this);
+
+		//See issue #7
 		this.on('change:targetToken', this.drawCenter, this);
 
+		//Function 4
 		this.on('successRound failRound endRound newGame', this.resetActive, this);
 		this.on('successRound', this.activeSuccess, this);
 		this.on('failRound', this.activeFail, this);
@@ -164,6 +173,7 @@ window.scoreModel = Backbone.Model.extend({
 			this.shuffleTokens();
 		}
 	},
+	//Todo: See Issue #7.
 	drawCenter: function(){
 		var target = this.get('targetToken');
 		var grid = {
@@ -213,18 +223,12 @@ window.scoreModel = Backbone.Model.extend({
 			  })
 			]
 		});
-		//render the board so that a player knows when they're active
-		//assign a listener...for winning. remove that listener when needed.
 	},
 	timeUp: function(){
 		//collate bids.
 		//requestMove....
 		this.collateBids();
 		this.requestMove();
-	},
-	updateActive: function(){
-		//(Currently not used, might be a good idea for a refactor)
-		//takes the first element of the queue, assigns the owner of that bid to 'active player'
 	},
 	collateBids: function(){
 		//uses createNewBid to take all the bid numbers, and order the players into the queue
@@ -260,9 +264,8 @@ window.scoreModel = Backbone.Model.extend({
 	clearQueue: function(){
 		this.set('bidQueue', []);
 	},
+	//non-DRY. See issue #7;
 	handleIncomingBid: function(){
-		//This WHOLE FUNCTION MAY NOT BE NECESSARY; it only starts the timer **
-		//responding to a new bid trigger event;
 		var x = $('.bidfield > input');
 		if (!this.get('activePlayer')){
 			this.startTimer();
