@@ -391,7 +391,6 @@ window.canvasDrawView = Backbone.View.extend({
                 r1: boxSize*.06,//range 1
                 r2: boxSize*.4,//range 2
             }
-
             context.fillStyle = colorHex['silverBorder'];
             context.strokeStyle = colorHex['silverBorder'];
             context.lineWidth = boxSize*.02;
