@@ -1,14 +1,14 @@
 window.scoreModel = Backbone.Model.extend({
 	defaults : {
-		tokensRemaining: [],
-		targetToken: undefined,
-		timerValue : 60,
-		timeRemaining: true,
-		bidQueue : [],
-		activePlayer : undefined,
-		activeBid: undefined,
-		activeMoves : 0,
-		interval: undefined,
+		tokensRemaining		: [],
+		targetToken			: undefined,
+		timerValue 			: 60,
+		timeRemaining		: true,
+		bidQueue 			: [],
+		activePlayer 		: undefined,
+		activeBid			: undefined,
+		activeMoves			: 0,
+		interval 			: undefined,
 		startTimerFn: function(){
 			if(this.get('timerValue') === 60){
 				this.set('interval', setInterval(function(){
@@ -88,9 +88,7 @@ window.scoreModel = Backbone.Model.extend({
 			})],
 			callback: triggerEnd
 		});
-
 		//Note, this event, which is simply adding a token to playerModel, could be a responded to inside playerModel..
-		//it's just points...but would need Backbone to be 
 	},
 	activeFail: function(bid){
 		var bid = bid[0]
@@ -110,10 +108,7 @@ window.scoreModel = Backbone.Model.extend({
 			//if length >0
 			//randomly select a token from active player's array of won tokens, 
 			//	return them to remainingTokens
-			//
-			//dequeue bid, or make sure it's discarded
-			//if more bids, updateActive, keep playing
-			//if no more bids, re-insert the current token to remaining tokens
+
 			if (this.get('bidQueue').length > 0){
 				Backbone.Events.trigger('resetPosition');
 				this.requestMove();
@@ -123,9 +118,6 @@ window.scoreModel = Backbone.Model.extend({
 				this.trigger('endRound');
 			}
 			this.shuffleTokens();
-			//shuffle the tokens
-			//trigger endRound
-			// this.trigger('endRound');			
 		}.bind(this);
 	},
 	newRound: function(test){
