@@ -1,18 +1,17 @@
 window.appModel = Backbone.Model.extend({
-
     defaults: {
-        numPlayers: undefined,
-        playerCollection: undefined,
-        gameRunning: false,
-        roundRunning: false,
-        winnerDeclared: false,
-        bidManager: undefined,
-        tokens: undefined,
-        boardModel: undefined,
-        scoreModel: undefined, //handles scores, bids, remaining tokens
-        robots: undefined,
-        players: undefined,
-        newPlayerNames: undefined,
+        numPlayers          : undefined,
+        playerCollection    : undefined,
+        gameRunning         : false,
+        roundRunning        : false,
+        winnerDeclared      : false,
+        bidManager          : undefined,
+        tokens              : undefined,
+        boardModel          : undefined,
+        scoreModel          : undefined, //handles scores, bids, remaining tokens
+        robots              : undefined,
+        players             : undefined,
+        newPlayerNames      : undefined,
         colorHex: {
             brown: '#6C4E2F',
             R:'#F21018',
@@ -31,11 +30,11 @@ window.appModel = Backbone.Model.extend({
             xSquareG        : '#DBDBDB',
             xSquareY        : '#EBE0A6'
         },
-        boxSize: undefined
+        boxSize             : undefined
     },
     initialize: function(){
-        var windowWidth     = $(window).width()
-        var windowHeight    = $(window).height() 
+        var windowWidth     = $(window).width();
+        var windowHeight    = $(window).height(); 
         var boardWidth = 
         (windowWidth <= windowHeight) ? windowWidth : windowHeight;
         boardWidth *= 0.95; 
@@ -47,6 +46,9 @@ window.appModel = Backbone.Model.extend({
             }),
             scoreModel      : new scoreModel()
         });
+
+        //Helper functions that provide data that child views' render functions will need.
+        //boxSize Data
         this.on('change:boxSize', function(){
             var boxSize = this.get('boxSize');
             var robots = this.get('boardModel').get('robots');
@@ -55,6 +57,7 @@ window.appModel = Backbone.Model.extend({
             }, this)
         }, this);
 
+        //Username data
         this.on('change:numPlayers', function(){
             var numPlayers = this.get('numPlayers')
             //define a set of hardcoded new players: allow for name input later..
@@ -69,8 +72,6 @@ window.appModel = Backbone.Model.extend({
                 var finalPlayers = new players(newPlayers);
                 this.set('players', finalPlayers);
             }
-        })
-    },
-    placeRobots: function(){
+        });
     }
 });

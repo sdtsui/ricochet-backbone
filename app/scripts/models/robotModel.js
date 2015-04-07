@@ -15,10 +15,7 @@ window.robotModel = Backbone.Model.extend({
 		},
 		boardModel: undefined,
 		boxSize: undefined,
-		lastMoveDir: undefined //still not perfect: 
-		//robot can move backwards without another robot's move clearing
-		//technically illegal; a quick fix by adding a reassignment to 
-		//lastMoveDir into the current robot after it clears everything
+		lastMoveDir: undefined //See issue #6.
 	},
 	initialize: function(){
 		Backbone.Events.on('boardAssetsRendered', this.triggerMove, this);
@@ -42,4 +39,4 @@ window.robotModel = Backbone.Model.extend({
 		var lastLoc = _.clone(this.get('roundLoc'));
 		this.set('loc', lastLoc);		
 	}
-})
+});

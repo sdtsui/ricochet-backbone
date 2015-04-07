@@ -1,9 +1,9 @@
 window.boardModel = Backbone.Model.extend({
     defaults: {
-        boardWidth: undefined,
-        quadrantArrangement: undefined,
-        completeBoard: undefined,
-        enteringMove: true,
+        boardWidth          : undefined,
+        quadrantArrangement : undefined,
+        completeBoard       : undefined,
+        enteringMove        : true,
         baseQuadrants: new quadrantHolder({}),
         rHash : {
             //hash for a 90 degree rotation
@@ -38,10 +38,6 @@ window.boardModel = Backbone.Model.extend({
         activeRobot: undefined
     },
     initialize: function(){
-        this.on('all', function(n){
-            //right now, do nothing. 
-            //maybe some responsive blinking??
-        })
         this.set('quadrantArrangement', this.setQuads());
         this.constructBoard(this.get('quadrantArrangement'));
         this.setRobots();
@@ -87,14 +83,13 @@ window.boardModel = Backbone.Model.extend({
             next.nextSquare = this.checkMoveDirValid(next.nextSquare, dir, robotToMove, completeBoard);
         }
         if (next.moves === 0){
-            //'illegal : nothing happens; should disregard keydown';
+            //'illegal move: nothing happens; should disregard keydown';
         } else {
-
             robotToMove.savePosition();
             robotToMove.set('lastMoveDir', dir);
             robotToMove.set('loc', next.lastValidSquare);
 
-            // Checking for arrival, code pasted:
+            // Checking for arrival. Look out: a little messy. Can be refactored. Currently not DRY.
             var activeRobot = this.get('robots').where({color: robot})[0];
             var target = rootModel.get('scoreModel').get('targetToken');
             if((activeRobot.get('loc').row === target.loc.row  && activeRobot.get('loc').col === target.loc.col)//match position
@@ -130,6 +125,7 @@ window.boardModel = Backbone.Model.extend({
         //no conflicts, move is legal
         return nextSquare;
     },
+    //converts rowsStrings into arrays, for easy access by draw and position checking functions
     rowStringsToArrays : function(quad, size){
         var convertedQuad = [];
         for (var i = 0 ;  i < size; i++){
@@ -137,6 +133,7 @@ window.boardModel = Backbone.Model.extend({
         }
         return convertedQuad;
     },
+    //Loops through each quadrant after a rotation, re-adjusting walls to conform to the new rotated quadrant.
     adjustWallsAfterRotation : function(quad, size){
         var adjustedQuad = []
         for (var i = 0; i < size; i++){
@@ -169,6 +166,10 @@ window.boardModel = Backbone.Model.extend({
         }
         return this.adjustWallsAfterRotation(newQuad, 8);
     },
+    //A random quadrant is chosen, then a random side is chosen. Depending on what order it was chosen in, 
+    //each quadrant rotates a number of times so that all 4 quadrants create a square.
+    //For example, the 3rd selected quadrant is rotated twice, since default orientation is all facing "north west".
+    //3rd quadrant needs to be facing "north east", and is thus rotated twice.
     setQuads: function(){
         var quadrants = [1,2,3,4]
         var arrangement = [];
@@ -229,6 +230,7 @@ window.boardModel = Backbone.Model.extend({
         }
         this.set('robots', new robots(newRobots));
     },
+    //Concatenates quadrants in position 1 and 4, with quadrants in positions 2 and 3.
     constructBoard: function(boardArray){
         var newBoard = [];
         for (var i = 0; i < 8; i++){

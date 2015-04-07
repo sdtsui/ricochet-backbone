@@ -88,4 +88,4 @@ window.quadrantHolder = Backbone.Model.extend({
 		this.set('Q3', [this.get('Q3A'),this.get('Q3B')]);
 		this.set('Q4', [this.get('Q4A'),this.get('Q4B')]);
 	}
-})
+});
