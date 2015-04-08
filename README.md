@@ -2,8 +2,7 @@
 ![Demo](http://i.imgur.com/oR7ESXJ.gif)
 [Play the webapp!](https://ricochet.herokuapp.com)
 
-Ricochet Robots, rebuilt to be played locally.
-Side project, in Backbone.js and HMTL5 Canvas. 
+Ricochet Robots, rebuilt to be played locally in Backbone.js and HMTL5 Canvas. 
 Please see [sdtsui.com](https://sdtsui.com).
 
 To run locally:
