@@ -18,10 +18,9 @@ window.robotView = Backbone.View.extend({
   activate: function(){
     var props = this.model.attributes;
     var robot = $('.'+props.color);
-    robot.removeClass('rotated');
-    robot.addClass('rotated');
+    robot.toggleClass('rotated');
     setTimeout(function(){
-      this.removeClass('rotated');
+      this.toggleClass('rotated');
     }.bind(robot),500);
   },
   setup: function(dir){

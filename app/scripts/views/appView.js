@@ -20,7 +20,6 @@ window.appView = Backbone.View.extend({
     //Decision to go with a new HTML canvas influenced by original scope: only needed simple animations.
     //Made the most sense at the time spin the canvas elements using jQuery instead of creating 
     //an animation function on the canvas.
-    //
     appendRobots: function(){
         var robots = this.model.get('boardModel').get('robots');
         for(var i = 0 ; i < robots.length; i++){
