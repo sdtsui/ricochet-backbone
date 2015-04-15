@@ -1,3 +1,5 @@
+
+//Core functionality in lines 69-80.
 var startDialog = function(viewsToRender, parentModel, test){
     var diagMessages = ['Let\'s play Ricochet Robots! \n How many players?', "What are your players' names?"];
 
