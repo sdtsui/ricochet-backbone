@@ -46,7 +46,6 @@ window.appModel = Backbone.Model.extend({
             }),
             scoreModel      : new scoreModel()
         });
-
         //Helper functions that provide data that child views' render functions will need.
         //boxSize Data
         this.on('change:boxSize', function(){
