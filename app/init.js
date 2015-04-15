@@ -15,7 +15,7 @@ $(document).on('ready', function(){
     });
 
     // Last param of this function allows for fast rendering of 4 players
-    startDialog([APPDIV, boardDetails], rootModel, false);
+    startDialog([APPDIV, boardDetails], rootModel, true);
 
 });
 
