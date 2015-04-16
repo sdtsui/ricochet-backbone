@@ -23,7 +23,7 @@ window.robotView = Backbone.View.extend({
             this.toggleClass('rotated');
         }.bind(robot),500);
     },
-    setup: function(dir){
+    setup: function(){
         var props = this.model.attributes;
         var boxSize = props.boxSize;
 
@@ -37,46 +37,33 @@ window.robotView = Backbone.View.extend({
 
         var colors = rootModel.get('colorHex');
         var context = robot[0].getContext('2d');
+        this.drawRobot(context, colors, props);
 
+    },
+    drawRobot: function(context, colors, props){
+        var drawEllipse = function(rotation){
+            context.beginPath();
+            for (var i = 0 * Math.PI; i < 2 * Math.PI; i += 0.01 ) {
+                var xPos = 20 - (10 * Math.sin(i)) * Math.sin(rotation * Math.PI) + (20 * Math.cos(i)) * Math.cos(rotation * Math.PI);
+                var yPos = 20 + (20 * Math.cos(i)) * Math.sin(rotation * Math.PI) + (10 * Math.sin(i)) * Math.cos(rotation * Math.PI);
+
+                if (i == 0) {
+                    context.moveTo(xPos, yPos);
+                } else {
+                    context.lineTo(xPos, yPos);
+                }
+            }
+            context.lineWidth = 2;
+            context.strokeStyle = 'black';
+            context.fillStyle = colors[props.color];
+            context.closePath();
+            context.stroke();
+            context.fill();
+        }
         //Draw Ellipse one, outside the circular robot.
-        context.beginPath();
-        for (var i = 0 * Math.PI; i < 2 * Math.PI; i += 0.01 ) {
-            xPos = 20 - (10 * Math.sin(i)) * Math.sin(0.5 * Math.PI) + (20 * Math.cos(i)) * Math.cos(0.5 * Math.PI);
-            yPos = 20 + (20 * Math.cos(i)) * Math.sin(0.5 * Math.PI) + (10 * Math.sin(i)) * Math.cos(0.5 * Math.PI);
-
-            if (i == 0) {
-                context.moveTo(xPos, yPos);
-            } else {
-                context.lineTo(xPos, yPos);
-            }
-        }
-        context.lineWidth = 2;
-        context.strokeStyle = 'black';
-        context.fillStyle = colors[props.color];
-        context.closePath();
-        context.stroke();
-        context.fill();
-
-        //Draw Ellipse two.
-        context.beginPath();
-        for (var i = 0 * Math.PI; i < 2 * Math.PI; i += 0.01 ) {
-            xPos = 20 - (10 * Math.sin(i)) * Math.sin(1 * Math.PI) + (20 * Math.cos(i)) * Math.cos(1 * Math.PI);
-            yPos = 20 + (20 * Math.cos(i)) * Math.sin(1 * Math.PI) + (10 * Math.sin(i)) * Math.cos(1 * Math.PI);
-
-            if (i == 0) {
-                context.moveTo(xPos, yPos);
-            } else {
-                context.lineTo(xPos, yPos);
-            }
-        }
-        context.lineWidth = 2;
-        context.strokeStyle = 'black';
-        context.fillStyle = colors[props.color];
-        context.closePath();
-        context.stroke();
-        context.fill();
-
-
+        drawEllipse(0.5);
+        //Draw Ellipse two, also outside the circular robot.
+        drawEllipse(1);
         //Draw main large circle that represents robot.
         context.beginPath();
         context.fillStyle = colors[props.color];
@@ -98,18 +85,11 @@ window.robotView = Backbone.View.extend({
         context.stroke();
 
         //draw a circle inside, draw arcs inside the smaller circle
-        //
-        //LEFT:
-        //Draw an ellipse, that stretches outside the robot
-        //Draw a dot in the middle
-        //Draw a thick arc
-        //remove backgrounds..
         context.beginPath();
         context.lineWidth = 1;
         context.arc(20,20,3,0,Math.PI*2);
         context.stroke();
     },
-
     /**
     * Moves the robot to a location on the board canvas element, using the board's loc property.
     */
