@@ -1,8 +1,7 @@
 # ricochet-backbone
 
-Ricochet Robot is a board game invented by [Alex Randolph](http://en.wikipedia.org/wiki/Alex_Randolph), with art by [Franz Vohwinkel](http://en.wikipedia.org/wiki/Franz_Vohwinkel). It's is a fast paced multiplayer puzzle game. Vie for points by solving a complex puzzle faster than your friends. Check out the [blog post](http://sdtsui.com/2015/04/06/ricochet-robots-ii/) on this project for more information about the game.
+Ricochet Robot is a board game invented by [Alex Randolph](http://en.wikipedia.org/wiki/Alex_Randolph), with art by [Franz Vohwinkel](http://en.wikipedia.org/wiki/Franz_Vohwinkel). It's åa fast paced multiplayer puzzle game. Vie for points by solving a complex puzzle faster than your friends. Check out the [blog post](http://sdtsui.com/2015/04/06/ricochet-robots-ii/) on this project for more information about the game.
 Built with Backbone.js, jQuery, and HTML5 Canvas. Intended for local play.
-
 
 ## Play the Webapp!
 (click the image below)  
@@ -19,7 +18,6 @@ Built with Backbone.js, jQuery, and HTML5 Canvas. Intended for local play.
 ##Instructions/Setup (Demo):
 [![Set-up Demo](http://i.imgur.com/tHKD4wm.gif)](https://ricochet.herokuapp.com)
 
-
 ## Contributing
 Accepting contributions!
 
@@ -29,12 +27,9 @@ Reach out if you have other ideas, either through the issues page, or by finding
 
 [Check out the style guide, contributing.md, and issues page for ideas.](https://github.com/sdtsui/ricochet-backbone/issues)
 
-
-
 ###To run locally:
 
 * Clone the repo
 * run `npm install` (requires backbone, vex, jquery, and some server dependencies)
 * run `nodemon server.js`
 * Navigate to localhost:8080
-
