@@ -1,14 +1,13 @@
 
 //Core functionality in lines 69-80.
 var startDialog = function(viewsToRender, parentModel, test){
-    var diagMessages = ['Let\'s play Ricochet Robots! \n How many players?', "What are your players' names?"];
-
     //Uses startDialog's closure to access parentModel, setting the players and names.
     //Also triggers render processes through viewsToRender.
     /**
     * Input, an object, 'data', for which data.players holds an array of strings.
     * @return {[type]} [description]
     */
+    var diagMessages = ['Let\'s play Ricochet Robots! \n How many players?', "What are your players' names?"];
     var startGame = function(data) {
         var playerNames = [];
         for (var i = 0 ; i < data.players.length; i++){

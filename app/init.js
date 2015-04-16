@@ -7,7 +7,6 @@ $(document).on('ready', function(){
         model: rootModel,
         el: $('#appView')
     });
-
     //**This can be abstracted back into the backbone model...**
     //Draw on canvas.
     window.boardDetails = new canvasDrawView({
@@ -15,10 +14,9 @@ $(document).on('ready', function(){
     });
 
     // Last param of this function allows for fast rendering of 4 players
-    startDialog([APPDIV, boardDetails], rootModel, true);
+    startDialog([APPDIV, boardDetails], rootModel, false);
 
 });
-
 
 //condense this into a clickhandler function to put into boardView eventually,
 //makes more sense there than in a random script
