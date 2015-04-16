@@ -132,7 +132,7 @@ window.canvasDrawView = Backbone.View.extend({
         context.strokeStyle = '#ABADA0';
         context.stroke();
         //moveTo
-        //draw a tiny arc at 4 points
+        //draw a tiny circle at 8 points
         context.lineWidth = .5;
         context.strokeStyle = '#ABADA0';
 

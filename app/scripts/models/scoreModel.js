@@ -33,7 +33,7 @@ window.scoreModel = Backbone.Model.extend({
 		this.set('bidCounter', this.get('bidCounter')+1);
 	},
 	//Handles multiple sources of game logic. 
-	//Generally, 4 main functions:
+	//4 main functions:
 	//1) When robots are moved, scoreModel checks if a point is won, or the round is over.
 	//2) When bids are placed, starts the timer when appropriate.
 	//3) When timer reaches 0, gathers bids to create a queue, requesting moves from players.

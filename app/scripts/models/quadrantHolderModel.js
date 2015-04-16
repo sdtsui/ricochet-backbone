@@ -1,5 +1,12 @@
 window.quadrantHolder = Backbone.Model.extend({
     //All Quadrants:
+    //Strings are hardcoded, and 4 two-sided quadrants that can be flipped and rearranged to form a board.
+    //There are 96 different variations.
+    //Converted from Python code written by Michael Fogleman: 
+    //https://github.com/fogleman/Ricochet/blob/master/model.py
+    //
+    //See boardModel.js, specifically constructBoard and rotateQuadrant, for information
+    //on how these strings are formatted, converted, and then concatenated to create a playable baord.
 	defaults: {
 	    Q1A : [
 	        'NW,N,N,N,NE,NW,N,N',
@@ -82,6 +89,7 @@ window.quadrantHolder = Backbone.Model.extend({
 	        'W,X,X,X,X,X,E,NW'
 	    ]
 	},
+	//Set the quadrants on the model
 	initialize: function() {
 		this.set('Q1', [this.get('Q1A'),this.get('Q1B')]);
 		this.set('Q2', [this.get('Q2A'),this.get('Q2B')]);
