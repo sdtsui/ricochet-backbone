@@ -1,5 +1,6 @@
 window.appModel = Backbone.Model.extend({
     defaults: {
+        boardWidth          : undefined, //set upon instantiation
         numPlayers          : undefined,
         playerCollection    : undefined,
         gameRunning         : false,
@@ -33,16 +34,9 @@ window.appModel = Backbone.Model.extend({
         boxSize             : undefined
     },
     initialize: function(){
-        var windowWidth     = $(window).width();
-        var windowHeight    = $(window).height(); 
-        var boardWidth = 
-        (windowWidth <= windowHeight) ? windowWidth : windowHeight;
-        boardWidth *= 0.95; 
         this.set({
-            windowWidth     : windowWidth,
-            windowHeight    : windowHeight,
             boardModel      : new boardModel({
-                boardWidth: boardWidth
+                boardWidth: this.get('boardWidth')
             }),
             scoreModel      : new scoreModel()
         });

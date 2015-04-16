@@ -1,8 +1,26 @@
+var findBoardDimensions = function(){
+    var windowWidth     = $(window).width();
+    var windowHeight    = $(window).height(); 
+    var boardWidth = 
+    (windowWidth <= windowHeight) ? windowWidth : windowHeight;
+    boardWidth *= 0.95; 
+    return {
+        windowWidth     : windowWidth,
+        windowHeight    : windowHeight,
+        boardWidth      : boardWidth
+    }
+}
+
 //instantiates the root models and associated views, starts initial user dialog.
 //adds jQuery input listeners
 $(document).on('ready', function(){
+    var boardDimensions = findBoardDimensions();
     //Instantiate the main appModel instance.
-    window.rootModel = new appModel()
+    window.rootModel = new appModel({
+        windowWidth : boardDimensions.windowWidth,
+        windowHeight : boardDimensions.windowHeight,
+        boardWidth : boardDimensions.boardWidth
+    });
     var APPDIV = new appView({
         model: rootModel,
         el: $('#appView')
